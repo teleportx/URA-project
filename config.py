@@ -7,7 +7,10 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-data_file = 'data.json'
+if not os.path.exists('data'):
+    os.mkdir('data')
+
+data_file = 'data/data.json'
 if not os.path.exists(data_file):
     with open(data_file, 'w+') as fp:
         fp.write('[]')

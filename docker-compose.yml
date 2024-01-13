@@ -1,10 +1,10 @@
 version: '2.2'
 services:
-   genpasswd_bot:
+   yasru_bot:
        build: .
        working_dir: /app
        volumes:
-           - ../KAPI-logs:/app/logs
+           - ../KAPI-logs:/app/data
        command: >
            python3.10 -m main
        restart: always
