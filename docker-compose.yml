@@ -1,0 +1,8 @@
+version: '2.2'
+services:
+   genpasswd_bot:
+       build: .
+       working_dir: /app
+       command: >
+           python3.10 -m main
+       restart: always
