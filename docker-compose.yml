@@ -3,6 +3,8 @@ services:
    genpasswd_bot:
        build: .
        working_dir: /app
+       volumes:
+           - ../KAPI-logs:/app/logs
        command: >
            python3.10 -m main
        restart: always
