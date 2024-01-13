@@ -24,6 +24,7 @@ async def start(message: types.Message):
     else:
         kb = ReplyKeyboardBuilder()
         kb.button(text='Я иду срать')
+        kb.button(text='Я иду ЛЮТЕЙШЕ ДРИСТАТЬ ПОНОСОМ')
         kb.button(text='Я закончил срать')
 
         await message.reply('Выберете действие.', reply_markup=kb.as_markup())
@@ -78,6 +79,12 @@ async def notify(message: types.Message):
     elif message.text == 'Я закончил срать':
         text = '⚠️ ВНИМАНИЕ ⚠️\n' \
                '`%s` закончил _срать_'
+
+    elif message.text == 'Я иду ЛЮТЕЙШЕ ДРИСТАТЬ ПОНОСОМ':
+        text = '⚠️️️️⚠️⚠️ ВНИМАНИЕ ⚠️⚠️⚠️\n\n' \
+               '⚠️НАДВИГАЕТСЯ *ГОВНОПОКАЛИПСИС*⚠️\n' \
+               '`%s` *прямо сейчас* пошел _адски дристать_ лютейшей струей *поноса*'
+
 
     else:
         return
