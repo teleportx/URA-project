@@ -19,5 +19,5 @@ class Telegram:
     token = environ.get('TOKEN')
     bot: Bot
 
-    users = _users
+    users: set = set(_users)
     admins = [306627312, 936638952]
