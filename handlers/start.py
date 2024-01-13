@@ -23,8 +23,10 @@ async def start(message: types.Message):
 
     else:
         kb = ReplyKeyboardBuilder()
-        kb.button(text='Я иду срать')
+
         kb.button(text='Я иду ЛЮТЕЙШЕ ДРИСТАТЬ ПОНОСОМ')
+        kb.button(text='Я иду срать')
+        kb.adjust(1)
         kb.button(text='Я закончил срать')
 
         await message.reply('Выберете действие.', reply_markup=kb.as_markup())
