@@ -1,5 +1,6 @@
 import asyncio
 import json
+import logging
 
 from aiogram import Router
 from aiogram import types
@@ -9,6 +10,7 @@ from aiogram.utils.keyboard import ReplyKeyboardBuilder
 import config
 
 router = Router()
+going = []
 
 
 @router.message(Command("start"))
@@ -16,7 +18,7 @@ async def start(message: types.Message):
     if message.chat.id not in config.Telegram.users:
         await message.reply('Извините, вы не можете уведомлять всех о том, что вы идете срать.\n\n'
                             'Если вы все же хотите это делать, напишите администратору бота с просьбой об этом.\n'
-                            f'**Ваш id:** `{message.chat.id}`',
+                            f'*Ваш id:* `{message.chat.id}`',
                             parse_mode='markdown')
 
     else:
@@ -37,14 +39,11 @@ async def add(message: types.Message, command: CommandObject):
         return
 
     config.Telegram.users.add(int(command.args))
-
     with open(config.data_file, 'w') as fp:
         fp.truncate()
         json.dump(list(config.Telegram.users), fp)
 
     await message.reply('Успешно!')
-
-    await asyncio.sleep(5)
 
 
 @router.message(Command("remove"))
@@ -61,11 +60,32 @@ async def add(message: types.Message, command: CommandObject):
         return
 
     config.Telegram.users.remove(int(command.args))
-
     with open(config.data_file, 'w') as fp:
         fp.truncate()
         json.dump(list(config.Telegram.users), fp)
 
     await message.reply('Успешно!')
 
-    await asyncio.sleep(5)
+
+@router.message()
+async def notify(message: types.Message):
+    await message.delete()
+
+    if message.text == 'Я иду срать':
+        text = '⚠️ *ВНИМАНИЕ* ⚠️\n' \
+               '`%s` *прямо сейчас* пошел _срать_'
+
+    elif message.text == 'Я закончил срать':
+        text = '⚠️ ВНИМАНИЕ ⚠️\n' \
+               '`%s` закончил _срать_'
+
+    else:
+        return
+
+    for user in config.Telegram.users:
+        try:
+            await config.Telegram.bot.send_message(user, text % message.chat.full_name,
+                                                   parse_mode='markdown')
+
+        except Exception as e:
+            logging.warning(f'Cannnot send notify to {message.chat.id} cause: {e}')
