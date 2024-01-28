@@ -1,5 +1,4 @@
-import json
-import os.path
+import logging
 from os import environ
 
 from aiogram import Bot
@@ -7,20 +6,18 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-if not os.path.exists('data'):
-    os.mkdir('data')
-
-data_file = 'data/data.json'
-if not os.path.exists(data_file):
-    with open(data_file, 'w+') as fp:
-        fp.write('[]')
-with open(data_file, 'rb') as fp:
-    _users = json.load(fp)
+DEBUG = environ.get('DEBUG') == "TRUE"
+logging_level = logging.WARN if not DEBUG else logging.DEBUG
 
 
 class Telegram:
     token = environ.get('TOKEN')
     bot: Bot
 
-    admins = {306627312, 936638952}
-    users: set = set(_users).union(admins)
+
+class DB:
+    host = environ.get('DB_HOST')
+    port = int(environ.get('DB_PORT'))
+    user = environ.get('DB_USER')
+    password = environ.get('DB_PASSWORD')
+    db_name = environ.get('DB_NAME')

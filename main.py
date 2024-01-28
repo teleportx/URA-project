@@ -5,14 +5,15 @@ from aiogram import Bot, Dispatcher
 
 import config
 import handlers
+import middlewares
 
 logging.basicConfig(level=logging.INFO)
 
 werkzeug = logging.getLogger('werkzeug')
-werkzeug.setLevel(logging.WARN)
+werkzeug.setLevel(config.logging_level)
 
 aiogram_event = logging.getLogger('aiogram.event')
-aiogram_event.setLevel(logging.WARN)
+aiogram_event.setLevel(config.logging_level)
 
 
 async def main():
@@ -20,6 +21,7 @@ async def main():
     config.Telegram.bot = bot
 
     dp = Dispatcher()
+    middlewares.setup(dp)
 
     dp.include_router(handlers.router)
 
