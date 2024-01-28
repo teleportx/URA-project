@@ -13,3 +13,4 @@ class PermissionField(BooleanField):
 class User(BaseModel):
     uid = BigIntegerField(primary_key=True, unique=True)
     admin = PermissionField()
+    sret = BooleanField(default=False)
