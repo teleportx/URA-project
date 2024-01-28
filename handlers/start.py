@@ -12,10 +12,12 @@ router = Router()
 async def start(message: types.Message):
     kb = ReplyKeyboardBuilder()
 
-    kb.button(text='Я иду ЛЮТЕЙШЕ ДРИСТАТЬ ПОНОСОМ')
+    kb.button(text='Я иду ЛЮТЕЙШЕ ДРИСТАТЬ')
     kb.button(text='Я иду срать')
-    kb.adjust(1)
     kb.button(text='Я закончил срать')
+    kb.button(text='Я просто пернул')
+
+    kb.adjust(2)
 
     await message.reply('Выберете действие.', reply_markup=kb.as_markup())
 
