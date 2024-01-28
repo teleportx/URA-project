@@ -3,8 +3,6 @@ services:
    yasru_bot:
        build: .
        working_dir: /app
-       volumes:
-           - ../KAPI-logs:/app/data
        command: >
            python3.10 -m main
-       restart: always
+       restart: unless-stopped
