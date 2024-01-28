@@ -15,7 +15,7 @@ router = Router()
 async def notify(message: types.Message, command: CommandObject):
     for user in User.select():
         try:
-            await config.Telegram.bot.send_message(user.uid, '❗️*Уведолмление*\n' + command.args,
+            await config.Telegram.bot.send_message(user.uid, '❗️*Уведомление*\n' + command.args,
                                                    parse_mode='markdown')
 
         except Exception as e:
