@@ -1,6 +1,9 @@
+from datetime import timedelta
+
 from aiogram import types, Router
 from aiogram.filters import Command, CommandObject
 
+import config
 from db.User import User
 from filters.user import UserAuthFilter
 
@@ -27,5 +30,7 @@ async def remove(message: types.Message, command: CommandObject):
     if not deleted:
         await message.reply('Пользователь не найден')
         return
+
+    await config.Telegram.bot.ban_chat_member(config.Telegram.group_id, int(command.args), timedelta(seconds=30))
 
     await message.reply('Успешно!')

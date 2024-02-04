@@ -1,6 +1,8 @@
 import logging
 
 from aiogram import types, Router, F
+from aiogram.enums import ChatType
+from aiogram.types import ChatPermissions
 
 import config
 from db.User import User
@@ -9,9 +11,8 @@ from filters.user import UserAuthFilter
 router = Router()
 
 
-@router.message(F.text.startswith('Я'), UserAuthFilter())
+@router.message(F.text.startswith('Я'), UserAuthFilter(), F.chat.type == ChatType.PRIVATE)
 async def send_srat(message: types.Message, user: User):
-
     must_not_sret = [
         'Я иду срать',
         'Я иду ЛЮТЕЙШЕ ДРИСТАТЬ',
@@ -60,6 +61,9 @@ async def send_srat(message: types.Message, user: User):
 
     user.sret = sret
     user.save()
+
+    permissions = ChatPermissions(can_send_messages=sret)
+    await config.Telegram.bot.restrict_chat_member(config.Telegram.group_id, message.from_user.id, permissions)
 
     for send_to in User.select():
         try:
