@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from peewee import *
 
 from .base import BaseModel
@@ -14,3 +16,9 @@ class User(BaseModel):
     uid = BigIntegerField(primary_key=True, unique=True)
     admin = PermissionField()
     sret = DateTimeField(null=True, default=None)
+
+
+class SretSession(BaseModel):
+    user = ForeignKeyField(User, on_delete='CASCADE')
+    start = DateTimeField()
+    end = DateTimeField(default=datetime.now)

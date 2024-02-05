@@ -7,7 +7,7 @@ from aiogram.enums import ChatType
 from aiogram.types import ChatPermissions
 
 import config
-from db.User import User
+from db.User import User, SretSession
 from filters.user import UserAuthFilter
 
 router = Router()
@@ -60,6 +60,9 @@ async def send_srat(message: types.Message, user: User):
 
     else:
         return
+
+    if user.sret is not None and not sret:
+        SretSession.create(user=user, start=user.sret)
 
     user.sret = datetime.now() if sret else None
     user.save()
