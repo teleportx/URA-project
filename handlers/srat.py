@@ -4,6 +4,7 @@ from datetime import datetime
 import aiogram
 from aiogram import types, Router, F
 from aiogram.enums import ChatType
+from aiogram.fsm.context import FSMContext
 from aiogram.types import ChatPermissions
 
 import config
@@ -11,6 +12,15 @@ from db.User import User, SretSession
 from filters.user import UserAuthFilter
 
 router = Router()
+
+
+async def handle_first_srat(message: types.Message, user: User):
+    if SretSession.select().where(SretSession.user == user).count() == 0:
+        await message.answer("*Впервые срете?*\n"
+                            "Не забудьте вступить в группу для обсуждения вашего сранья, когда вы делаете это не одни."
+                            "Для этого пропишите /link и вступите в группу, туда можно писать, только когда срешь.\n"
+                            "Также не забывайте завершать свое сранье, иначе вас будут бить говяными розгами.",
+                            parse_mode='markdown')
 
 
 @router.message(F.text.startswith('Я'), UserAuthFilter(), F.chat.type == ChatType.PRIVATE)
@@ -63,6 +73,9 @@ async def send_srat(message: types.Message, user: User):
 
     if user.sret is not None and not sret:
         SretSession.create(user=user, start=user.sret)
+
+    if sret:
+        await handle_first_srat(message, user)
 
     user.sret = datetime.now() if sret else None
     user.save()
