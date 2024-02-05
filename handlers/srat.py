@@ -1,4 +1,5 @@
 import logging
+from datetime import datetime
 
 from aiogram import types, Router, F
 from aiogram.enums import ChatType
@@ -23,12 +24,12 @@ async def send_srat(message: types.Message, user: User):
     ]
 
     if message.text in must_sret:
-        if not user.sret:
+        if user.sret is None:
             await message.reply('Ты что заканчивать захотел? Ты даже не срешь!')
             return
 
     if message.text in must_not_sret:
-        if user.sret:
+        if user.sret is not None:
             await message.reply('Ты прошлое свое сранье не закончил, а уже новое начинаешь?\n'
                                 'Нет уж. Будь добр, раз начал - закончи.')
             return
@@ -59,11 +60,11 @@ async def send_srat(message: types.Message, user: User):
     else:
         return
 
-    user.sret = sret
+    user.sret = datetime.now() if sret else None
     user.save()
 
-    permissions = ChatPermissions(can_send_messages=sret)
-    await config.Telegram.bot.restrict_chat_member(config.Telegram.group_id, message.from_user.id, permissions)
+    # permissions = ChatPermissions(can_send_messages=sret)
+    # await config.Telegram.bot.restrict_chat_member(config.Telegram.group_id, message.from_user.id, permissions)
 
     for send_to in User.select():
         try:
