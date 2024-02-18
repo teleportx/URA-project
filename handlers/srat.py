@@ -4,13 +4,19 @@ from datetime import datetime
 import aiogram
 from aiogram import types, Router, F
 from aiogram.enums import ChatType
-from aiogram.types import ChatPermissions
+from aiogram.types import ChatPermissions, InlineKeyboardButton
+from aiogram.utils.keyboard import InlineKeyboardBuilder
 
+import autoend_srat
 import config
 from db.User import User, SretSession
 from filters.user import UserAuthFilter
 
 router = Router()
+
+cancel_autoend_srat_keyboard = InlineKeyboardBuilder([[
+    InlineKeyboardButton(text='Отменить автозавершение сранья', callback_data='cancel_srat')
+]]).as_markup()
 
 
 async def handle_first_srat(message: types.Message, user: User):
@@ -32,6 +38,8 @@ async def send_srat(message: types.Message, user: User):
     must_sret = [
         'Я закончил срать',
     ]
+
+    reply_markup = None
 
     if message.text in must_sret:
         if user.sret is None:
@@ -71,10 +79,15 @@ async def send_srat(message: types.Message, user: User):
         return
 
     if user.sret is not None and not sret:
-        SretSession.create(user=user, start=user.sret)
+        SretSession.create_session(user)
+        if user.uid in autoend_srat.tasks:
+            autoend_srat.tasks[user.uid].cancel()
+            autoend_srat.tasks.pop(user.uid)
 
     if sret:
         await handle_first_srat(message, user)
+        await autoend_srat.create_srat_task(user)
+        reply_markup = cancel_autoend_srat_keyboard
 
     user.sret = datetime.now() if sret else None
     user.save()
@@ -90,7 +103,19 @@ async def send_srat(message: types.Message, user: User):
     for send_to in User.select():
         try:
             await config.Telegram.bot.send_message(send_to.uid, text % message.chat.full_name,
-                                                   parse_mode='markdown')
+                                                   parse_mode='markdown',
+                                                   reply_markup=reply_markup if send_to.uid == message.chat.id else None)
 
         except Exception as e:
             logging.warning(f'Cannnot send notify to {message.chat.id} cause: {e}')
+
+
+@router.callback_query(F.data == 'cancel_srat')
+async def cancel_srat(callback: types.CallbackQuery):
+    uid = callback.from_user.id
+    if uid in autoend_srat.tasks:
+        autoend_srat.tasks[uid].cancel()
+        autoend_srat.tasks.pop(uid)
+
+    await callback.answer('Отменили автозавершение.')
+    await callback.message.edit_reply_markup()

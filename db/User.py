@@ -22,3 +22,7 @@ class SretSession(BaseModel):
     user = ForeignKeyField(User, on_delete='CASCADE')
     start = DateTimeField()
     end = DateTimeField(default=datetime.now)
+
+    @classmethod
+    def create_session(cls, user: User):
+        cls.create(user=user, start=user.sret)
