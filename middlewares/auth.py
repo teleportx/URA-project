@@ -20,4 +20,10 @@ class AuthMiddleware(UtilMiddleware, ABC):
         return await handler(event, data)
 
     def get_bot_user(self, user: types.User) -> User:
-        return User.select().where(User.uid == user.id).get_or_none()
+        db_user = User.select().where(User.uid == user.id).get_or_none()
+
+        if db_user is not None and db_user.name != user.full_name:
+            db_user.name = user.full_name
+            db_user.save()
+
+        return db_user
