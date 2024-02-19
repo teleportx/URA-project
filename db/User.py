@@ -14,9 +14,10 @@ class PermissionField(BooleanField):
 
 class User(BaseModel):
     uid = BigIntegerField(primary_key=True, unique=True)
-    name = CharField(max_length=64)
+    name = CharField(max_length=64, default='New user')
     admin = PermissionField()
     sret = DateTimeField(null=True, default=None)
+    perdezhs = BigIntegerField(default=0)
 
 
 class SretSession(BaseModel):

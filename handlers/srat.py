@@ -67,6 +67,7 @@ async def send_srat(message: types.Message, user: User):
     elif message.text == 'Я просто пернул':
         text = '⚠️ ВНИМАНИЕ ⚠️\n' \
                '`%s` просто _пернул_'
+        user.perdezhs += 1
         sret = False
 
     elif message.text == 'Я иду ЛЮТЕЙШЕ ДРИСТАТЬ':
