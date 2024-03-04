@@ -12,7 +12,6 @@ logging_level = logging.WARN if not DEBUG else logging.DEBUG
 
 class Telegram:
     token = environ.get('TOKEN')
-    group_id = int(environ.get('GROUP_ID'))
     bot: Bot
 
 
