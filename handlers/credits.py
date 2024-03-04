@@ -16,7 +16,7 @@ async def credit(message: types.Message):
             f'Затем проект обретал новые функции, фишки и все это вылилось в большую штуку под названием УРА.'
             f'```\n\n'
             f'Разработчик - [Teleport](https://github.com/teleportx/)\n'
-            f'Автор идеи - _Алексей Шаблыкин_\n'
+            f'Автор идеи - [Алексей Шаблыкин](https://t.me/AllShabCH)\n'
             f'DevOps - [uuuuuno](https://github.com/uuuuuno/)\n')
 
     await message.answer(text, link_preview_options=LinkPreviewOptions(is_disabled=True))
