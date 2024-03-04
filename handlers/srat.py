@@ -24,8 +24,6 @@ async def send_srat(message: types.Message, user: User):
     must_not_sret = [1, 2]
     must_sret = [0]
 
-    reply_markup = None
-
     if message.text == 'Я иду срать':
         text = '⚠️ *ВНИМАНИЕ* ⚠️\n' \
                '`%s` *прямо сейчас* пошел _срать_'
@@ -63,35 +61,51 @@ async def send_srat(message: types.Message, user: User):
 
     await message.delete()
 
-    if sret in must_sret:
-        reply_markup = cancel_autoend_srat_keyboard
-        await SretSession.create(user=user, sret_type=SretType.DRISHET if sret == 2 else SretType.SRET)
+    # Send self
+    self_message = await message.answer(text % message.chat.full_name,
+                                        reply_markup=cancel_autoend_srat_keyboard if sret in must_not_sret else None)
+
+    # DB operations
+    if sret in must_not_sret:
+        await SretSession.create(message_id=self_message.message_id, user=user,
+                                 sret_type=SretType.DRISHET if sret == 2 else SretType.SRET)
 
     else:
         session = await SretSession.filter(user=user, end=None).get_or_none()
 
         if session is not None:
             session.end = datetime.now()
+            session.autoend = False
             if sret == 3:
                 session.sret_type = SretType.PERNUL
 
             await session.save()
+            try:
+                await config.Telegram.bot.edit_message_reply_markup(message.chat.id, session.message_id)
+
+            except aiogram.exceptions.TelegramBadRequest :
+                ...
 
         else:
-            await SretSession.create(user=user, end=datetime.now(), sret_type=SretType.PERNUL)
+            await SretSession.create(message_id=self_message.message_id, user=user, end=datetime.now(),
+                                     sret_type=SretType.PERNUL, autoend=False)
 
     # Send notifications
-    async for send_to in User.all():
+    users_send = set()
+    users_send += set(await User.all().only('uid'))
+    users_send.remove(user)
+
+    for send_to in users_send:
         try:
-            await config.Telegram.bot.send_message(send_to.uid, text % message.chat.full_name,
-                                                   parse_mode='markdown',
-                                                   reply_markup=reply_markup if send_to.uid == message.chat.id else None)
+            await config.Telegram.bot.send_message(send_to.uid, text % message.chat.full_name)
 
         except Exception as e:
-            logging.warning(f'Cannnot send notify to {message.chat.id} cause: {e}')
+            logging.info(f'Cannnot send notify to {message.chat.id} cause: {e}')
 
 
 @router.callback_query(F.data == 'cancel_srat')
 async def cancel_srat(callback: types.CallbackQuery):
+    await SretSession.filter(message_id=callback.message.message_id).update(autoend=False)
+
     await callback.answer('Отменили автозавершение.')
     await callback.message.edit_reply_markup()

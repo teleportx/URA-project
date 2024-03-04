@@ -14,9 +14,11 @@ class SretType(IntEnum):
 
 
 class SretSession(Model):
+    message_id = fields.BigIntField(pk=True, unique=True)
     user = fields.ForeignKeyField('models.User')
 
     start = AutoNowDatetimeField()
     end = fields.DatetimeField(null=True, default=None)
 
+    autoend = fields.BooleanField(default=True)
     sret_type = fields.IntEnumField(SretType)
