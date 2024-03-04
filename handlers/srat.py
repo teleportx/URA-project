@@ -83,7 +83,7 @@ async def send_srat(message: types.Message, user: User):
             try:
                 await config.Telegram.bot.edit_message_reply_markup(message.chat.id, session.message_id)
 
-            except aiogram.exceptions.TelegramBadRequest :
+            except aiogram.exceptions.TelegramBadRequest:
                 ...
 
         else:
