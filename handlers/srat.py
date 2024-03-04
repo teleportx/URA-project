@@ -11,12 +11,10 @@ import config
 from db.User import User
 from db.ToiletSessions import SretSession, SretType
 from filters.user import UserAuthFilter
+from keyboards import sret_keyboard
+from keyboards.srat_var_keyboard import SretActions
 
 router = Router()
-
-cancel_autoend_srat_keyboard = InlineKeyboardBuilder([[
-    InlineKeyboardButton(text='Отменить автозавершение сранья', callback_data='cancel_srat')
-]]).as_markup()
 
 
 @router.message(F.text.startswith('Я'), UserAuthFilter(), F.chat.type == ChatType.PRIVATE)
@@ -24,22 +22,22 @@ async def send_srat(message: types.Message, user: User):
     must_not_sret = [1, 2]
     must_sret = [0]
 
-    if message.text == 'Я иду срать':
+    if message.text == SretActions.SRET:
         text = '⚠️ *ВНИМАНИЕ* ⚠️\n' \
                '`%s` *прямо сейчас* пошел _срать_'
         sret = 1
 
-    elif message.text == 'Я закончил срать':
+    elif message.text == SretActions.END:
         text = '⚠️ ВНИМАНИЕ ⚠️\n' \
                '`%s` закончил _срать_'
         sret = 0
 
-    elif message.text == 'Я просто пернул':
+    elif message.text == SretActions.PERNUL:
         text = '⚠️ ВНИМАНИЕ ⚠️\n' \
                '`%s` просто _пернул_'
         sret = 3
 
-    elif message.text == 'Я иду ЛЮТЕЙШЕ ДРИСТАТЬ':
+    elif message.text == SretActions.DRISHET:
         text = '⚠️️️️⚠️⚠️ ВНИМАНИЕ ⚠️⚠️⚠️\n\n' \
                '⚠️НАДВИГАЕТСЯ *ГОВНОПОКАЛИПСИС*⚠️\n' \
                '`%s` *прямо сейчас* пошел _адски дристать_ лютейшей струей *поноса*'
@@ -63,7 +61,7 @@ async def send_srat(message: types.Message, user: User):
 
     # Send self
     self_message = await message.answer(text % message.chat.full_name,
-                                        reply_markup=cancel_autoend_srat_keyboard if sret in must_not_sret else None)
+                                        reply_markup=sret_keyboard.get() if sret in must_not_sret else None)
 
     # DB operations
     if sret in must_not_sret:

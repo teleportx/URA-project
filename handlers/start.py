@@ -5,6 +5,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.utils.keyboard import ReplyKeyboardBuilder
 
 from filters.user import UserAuthFilter
+from keyboards import srat_var_keyboard
 
 router = Router()
 
@@ -24,13 +25,4 @@ async def start(message: types.Message, first_joined: bool):
 
         await message.answer(text)
 
-    kb = ReplyKeyboardBuilder()
-
-    kb.button(text='Я иду ЛЮТЕЙШЕ ДРИСТАТЬ')
-    kb.button(text='Я иду срать')
-    kb.button(text='Я закончил срать')
-    kb.button(text='Я просто пернул')
-
-    kb.adjust(2)
-
-    await message.reply('Выберете действие.', reply_markup=kb.as_markup())
+    await message.reply('Выберете действие.', reply_markup=srat_keyboard.get())
