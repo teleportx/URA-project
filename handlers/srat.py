@@ -19,40 +19,12 @@ cancel_autoend_srat_keyboard = InlineKeyboardBuilder([[
 ]]).as_markup()
 
 
-async def handle_first_srat(message: types.Message, user: User):
-    if (await SretSession.filter(user=user).count()) == 0:
-        await message.answer("*Впервые срете?*\n"
-                             "Не забудьте вступить в группу для обсуждения вашего сранья, когда вы делаете это не одни."
-                             "Для этого пропишите /link и вступите в группу, туда можно писать, только когда срешь.\n"
-                             "Также не забывайте завершать свое сранье, иначе вас будут бить говяными розгами.",
-                             parse_mode='markdown')
-
-
 @router.message(F.text.startswith('Я'), UserAuthFilter(), F.chat.type == ChatType.PRIVATE)
 async def send_srat(message: types.Message, user: User):
-    must_not_sret = [
-        'Я иду срать',
-        'Я иду ЛЮТЕЙШЕ ДРИСТАТЬ',
-    ]
-
-    must_sret = [
-        'Я закончил срать',
-    ]
+    must_not_sret = [1, 2]
+    must_sret = [0]
 
     reply_markup = None
-
-    if message.text in must_sret:
-        if not await SretSession.filter(user=user, end=None).exists():
-            await message.reply('Ты что заканчивать захотел? Ты даже не срешь!')
-            return
-
-    if message.text in must_not_sret:
-        if await SretSession.filter(user=user, end=None).exists():
-            await message.reply('Ты прошлое свое сранье не закончил, а уже новое начинаешь?\n'
-                                'Нет уж. Будь добр, раз начал - закончи.')
-            return
-
-    await message.delete()
 
     if message.text == 'Я иду срать':
         text = '⚠️ *ВНИМАНИЕ* ⚠️\n' \
@@ -78,8 +50,20 @@ async def send_srat(message: types.Message, user: User):
     else:
         return
 
-    if sret in [1, 2]:
-        await handle_first_srat(message, user)
+    if sret in must_sret:
+        if not await SretSession.filter(user=user, end=None).exists():
+            await message.reply('Ты что заканчивать захотел? Ты даже не срешь!')
+            return
+
+    if sret in must_not_sret:
+        if await SretSession.filter(user=user, end=None).exists():
+            await message.reply('Ты прошлое свое сранье не закончил, а уже новое начинаешь?\n'
+                                'Нет уж. Будь добр, раз начал - закончи.')
+            return
+
+    await message.delete()
+
+    if sret in must_sret:
         reply_markup = cancel_autoend_srat_keyboard
         await SretSession.create(user=user, sret_type=SretType.DRISHET if sret == 2 else SretType.SRET)
 
@@ -96,14 +80,7 @@ async def send_srat(message: types.Message, user: User):
         else:
             await SretSession.create(user=user, end=datetime.now(), sret_type=SretType.PERNUL)
 
-    try:
-        permissions = ChatPermissions(can_send_messages=sret in [1, 2])
-        await config.Telegram.bot.restrict_chat_member(config.Telegram.group_id, message.from_user.id, permissions)
-
-    except aiogram.exceptions.TelegramBadRequest as e:
-        if e.message != 'Bad Request: can\'t remove chat owner':
-            raise e
-
+    # Send notifications
     async for send_to in User.all():
         try:
             await config.Telegram.bot.send_message(send_to.uid, text % message.chat.full_name,
