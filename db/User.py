@@ -1,30 +1,11 @@
-from datetime import datetime
+from tortoise.models import Model
+from tortoise import fields
 
-from peewee import *
-
-from .base import BaseModel
-
-
-class PermissionField(BooleanField):
-    PERMISSION_FIELD = True
-
-    def __init__(self):
-        super().__init__(default=False)
+from db.fields import PermissionField
 
 
-class User(BaseModel):
-    uid = BigIntegerField(primary_key=True, unique=True)
-    name = CharField(max_length=64, default='New user')
+class User(Model):
+    uid = fields.BigIntField(pk=True, unique=True)
+    name = fields.CharField(max_length=64, default='New user')
     admin = PermissionField()
-    sret = DateTimeField(null=True, default=None)
-    perdezhs = BigIntegerField(default=0)
 
-
-class SretSession(BaseModel):
-    user = ForeignKeyField(User, on_delete='CASCADE')
-    start = DateTimeField()
-    end = DateTimeField(default=datetime.now)
-
-    @classmethod
-    def create_session(cls, user: User):
-        cls.create(user=user, start=user.sret)

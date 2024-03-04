@@ -13,7 +13,7 @@ router = Router()
 
 @router.message(Command("notify"), UserAuthFilter(admin=True))
 async def notify(message: types.Message, command: CommandObject):
-    for user in User.select():
+    async for user in User.all():
         try:
             await config.Telegram.bot.send_message(user.uid, '❗️*Уведомление*\n' + command.args,
                                                    parse_mode='markdown')

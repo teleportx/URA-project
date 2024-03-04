@@ -4,6 +4,7 @@ import logging
 from aiogram import Bot, Dispatcher
 
 import config
+import db
 import handlers
 import middlewares
 
@@ -17,6 +18,8 @@ aiogram_event.setLevel(config.logging_level)
 
 
 async def main():
+    await db.init()
+
     bot = Bot(token=config.Telegram.token)
     config.Telegram.bot = bot
 

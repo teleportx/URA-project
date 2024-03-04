@@ -16,7 +16,7 @@ async def add(message: types.Message, command: CommandObject):
         await message.reply('Айди должен быть числом')
         return
 
-    User.create(uid=int(command.args))
+    await User.create(uid=int(command.args))
     await message.reply('Успешно!')
 
 
@@ -26,7 +26,7 @@ async def remove(message: types.Message, command: CommandObject):
         await message.reply('Айди должен быть числом')
         return
 
-    deleted = User.delete_by_id(int(command.args))
+    deleted = await User.filter(uid=int(command.args)).delete()
     if not deleted:
         await message.reply('Пользователь не найден')
         return

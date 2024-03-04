@@ -16,14 +16,14 @@ class AuthMiddleware(UtilMiddleware, ABC):
     ) -> Any:
         user = self.get_user(event)
 
-        data['user'] = self.get_bot_user(user)
+        data['user'] = await self.get_bot_user(user)
         return await handler(event, data)
 
-    def get_bot_user(self, user: types.User) -> User:
-        db_user = User.select().where(User.uid == user.id).get_or_none()
+    async def get_bot_user(self, user: types.User) -> User:
+        db_user = await User.filter(uid=user.id).first()
 
         if db_user is not None and db_user.name != user.full_name:
             db_user.name = user.full_name
-            db_user.save()
+            await db_user.save()
 
         return db_user
