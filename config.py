@@ -21,3 +21,11 @@ class DB:
     user = environ.get('DB_USER')
     password = environ.get('DB_PASSWORD')
     db_name = environ.get('DB_NAME')
+
+
+class REDIS:
+    host = environ.get('REDIS_HOST')
+    port = int(environ.get('REDIS_PORT'))
+    user = environ.get('REDIS_USER')
+    password = environ.get('REDIS_PASSWORD')
+    db_name = environ.get('REDIS_NAME')
