@@ -1,9 +1,7 @@
-from datetime import datetime
-
 from tortoise.models import Model
 from tortoise import fields
 
-from db.fields import PermissionField
+from db.fields import PermissionField, AutoNowDatetimeField
 
 
 class User(Model):
@@ -11,7 +9,7 @@ class User(Model):
     name = fields.CharField(max_length=129)
     admin = PermissionField()
 
-    created_at = fields.DatetimeField(default=datetime.now)
+    created_at = AutoNowDatetimeField()
 
 
 class Ban(Model):
@@ -19,4 +17,4 @@ class Ban(Model):
     banned_by = fields.BigIntField(null=True)
     reason = fields.TextField()
 
-    created_at = fields.DatetimeField(default=datetime.now)
+    created_at = AutoNowDatetimeField()

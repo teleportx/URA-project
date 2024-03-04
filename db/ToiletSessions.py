@@ -4,6 +4,8 @@ from enum import IntEnum
 from tortoise.models import Model
 from tortoise import fields
 
+from db.fields import AutoNowDatetimeField
+
 
 class SretType(IntEnum):
     SRET = 1
@@ -14,7 +16,7 @@ class SretType(IntEnum):
 class SretSession(Model):
     user = fields.ForeignKeyField('models.User')
 
-    start = fields.DatetimeField(default=datetime.now)
+    start = AutoNowDatetimeField()
     end = fields.DatetimeField(null=True, default=None)
 
     sret_type = fields.IntEnumField(SretType)
