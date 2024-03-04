@@ -20,7 +20,10 @@ aiogram_event.setLevel(config.logging_level)
 async def main():
     await db.init()
 
-    bot = Bot(token=config.Telegram.token)
+    bot = Bot(
+        token=config.Telegram.token,
+        parse_mode='markdown'
+    )
     config.Telegram.bot = bot
 
     dp = Dispatcher()
