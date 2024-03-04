@@ -3,7 +3,7 @@ from typing import Any, Dict, Callable
 
 from aiogram import types
 
-from db.User import User
+from db.User import User, Ban
 from middlewares.util import UtilMiddleware
 
 
@@ -15,6 +15,9 @@ class AuthMiddleware(UtilMiddleware, ABC):
         data: Dict[str, Any]
     ) -> Any:
         user = self.get_user(event)
+
+        if await Ban.filter(uid=user.id).exists():
+            return
 
         first_joined = False
         db_user = await User.filter(uid=user.id).get_or_none()

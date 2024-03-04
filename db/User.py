@@ -12,3 +12,11 @@ class User(Model):
     admin = PermissionField()
 
     created_at = fields.DatetimeField(default=datetime.now)
+
+
+class Ban(Model):
+    uid = fields.BigIntField(pk=True, unique=True)
+    banned_by = fields.BigIntField(null=True)
+    reason = fields.TextField()
+
+    created_at = fields.DatetimeField(default=datetime.now)
