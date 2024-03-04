@@ -33,11 +33,3 @@ async def start(message: types.Message, first_joined: bool):
     kb.adjust(2)
 
     await message.reply('Выберете действие.', reply_markup=kb.as_markup())
-
-
-@router.message(Command("start"), UserAuthFilter(auth=False))
-async def start_unauth(message: types.Message):
-    await message.reply('Извините, вы не можете уведомлять всех о том, что вы идете срать.\n\n'
-                        'Если вы все же хотите это делать, напишите администратору бота с просьбой об этом.\n'
-                        f'*Ваш id:* `{message.chat.id}`',
-                        parse_mode='markdown')
