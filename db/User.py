@@ -18,3 +18,18 @@ class Ban(Model):
     reason = fields.TextField()
 
     created_at = AutoNowDatetimeField()
+
+
+class Notify(Model):
+    text = fields.TextField()
+    queue = fields.ManyToManyField('models.User')
+
+    initiated_by = fields.ForeignKeyField('models.User', related_name='notifys_inited')
+    init_queue_size = fields.BigIntField()
+    errors = fields.BigIntField(default=0)
+
+    created_at = AutoNowDatetimeField()
+
+    @property
+    def completed(self):
+        return len(self.queue) == 0
