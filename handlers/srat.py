@@ -6,6 +6,7 @@ from aiogram import types, Router, F
 from aiogram.enums import ChatType
 from aiogram.types import ChatPermissions, InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
+from loguru import logger
 
 import config
 from db.User import User
@@ -98,7 +99,7 @@ async def send_srat(message: types.Message, user: User):
             await config.Telegram.bot.send_message(send_to.uid, text % message.chat.full_name)
 
         except Exception as e:
-            logging.info(f'Cannnot send notify to {message.chat.id} cause: {e}')
+            logger.info(f'Cannnot send notify to {message.chat.id} cause: {e}')
 
 
 @router.callback_query(F.data == 'cancel_srat')

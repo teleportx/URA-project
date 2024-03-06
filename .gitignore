@@ -162,3 +162,5 @@ cython_debug/
 data.json
 .setupdb.py
 test.py
+
+logs

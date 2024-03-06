@@ -1,5 +1,4 @@
 import asyncio
-import logging
 
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.redis import RedisStorage
@@ -9,13 +8,9 @@ import db
 import handlers
 import middlewares
 
-logging.basicConfig(level=logging.INFO)
+import setup_logger
 
-werkzeug = logging.getLogger('werkzeug')
-werkzeug.setLevel(config.logging_level)
-
-aiogram_event = logging.getLogger('aiogram.event')
-aiogram_event.setLevel(config.logging_level)
+setup_logger.__init__('Bot Service')
 
 
 async def main():

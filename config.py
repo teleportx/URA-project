@@ -7,12 +7,15 @@ from dotenv import load_dotenv
 load_dotenv()
 
 DEBUG = environ.get('DEBUG') == "TRUE"
-logging_level = logging.WARN if not DEBUG else logging.DEBUG
 
 
 class Telegram:
     token = environ.get('TOKEN')
     bot: Bot
+
+
+class Logger:
+    max_file_size = 10 * 1024 ** 2
 
 
 class DB:

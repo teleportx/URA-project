@@ -1,20 +1,15 @@
 import asyncio
-import logging
 
 from aiogram import Bot
+from loguru import logger
 from tortoise.functions import Count
 
 import config
 import db
+import setup_logger
 from db.User import Notify
 
-logging.basicConfig(level=logging.INFO)
-
-werkzeug = logging.getLogger('werkzeug')
-werkzeug.setLevel(config.logging_level)
-
-aiogram_event = logging.getLogger('aiogram.event')
-aiogram_event.setLevel(config.logging_level)
+setup_logger.__init__('Notify Service')
 
 
 async def notify_loop(bot: Bot):
@@ -30,7 +25,7 @@ async def notify_loop(bot: Bot):
                     notify.errors += 1
                     await notify.save()
 
-                    logging.info(f"Can't send notification `{notify.pk}` to `{send_to.pk}` because {e}")
+                    logger.info(f"Can't send notification `{notify.pk}` to `{send_to.pk}` because {e}")
 
                 await notify.queue.remove(send_to)
                 await asyncio.sleep(2)

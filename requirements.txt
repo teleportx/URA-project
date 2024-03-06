@@ -3,3 +3,4 @@ python-dotenv==1.0.1
 aiopg==1.4.0
 redis==5.0.2
 tortoise-orm==0.20.0
+loguru==0.7.2
