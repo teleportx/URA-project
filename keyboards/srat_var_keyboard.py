@@ -5,10 +5,10 @@ from aiogram.utils.keyboard import ReplyKeyboardBuilder
 
 
 class SretActions(Enum):
-    SRET = 'Я иду ЛЮТЕЙШЕ ДРИСТАТЬ'
-    DRISHET = 'Я иду срать'
-    PERNUL = 'Я закончил срать'
-    END = 'Я просто пернул'
+    SRET = 'Я иду срать'
+    DRISHET = 'Я иду ЛЮТЕЙШЕ ДРИСТАТЬ'
+    PERNUL = 'Я просто пернул'
+    END = 'Я закончил срать'
 
 
 def get() -> ReplyKeyboardMarkup:
