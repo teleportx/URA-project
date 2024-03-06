@@ -6,11 +6,11 @@ from dotenv import load_dotenv
 load_dotenv()
 
 DEBUG = environ.get('DEBUG') == "TRUE"
+bot: Bot
 
 
 class Telegram:
     token = environ.get('TOKEN')
-    bot: Bot
 
 
 class Logger:

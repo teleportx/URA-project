@@ -77,7 +77,7 @@ async def send_srat(message: types.Message, user: User):
 
             await session.save()
             try:
-                await config.Telegram.bot.edit_message_reply_markup(message.chat.id, session.message_id)
+                await config.bot.edit_message_reply_markup(message.chat.id, session.message_id)
 
             except aiogram.exceptions.TelegramBadRequest:
                 ...
@@ -93,7 +93,7 @@ async def send_srat(message: types.Message, user: User):
 
     for send_to in users_send:
         try:
-            await config.Telegram.bot.send_message(send_to.uid, text % message.chat.full_name)
+            await config.bot.send_message(send_to.uid, text % message.chat.full_name)
 
         except Exception as e:
             logger.info(f'Cannnot send notify to {message.chat.id} cause: {e}')

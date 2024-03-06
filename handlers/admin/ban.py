@@ -46,7 +46,7 @@ async def ban(message: types.Message, command: CommandObject, user: User):
                 f'```Причина:\n{reason}```')
 
         async for send_to in User.filter(admin=True):
-            await config.Telegram.bot.send_message(send_to.uid, text)
+            await config.bot.send_message(send_to.uid, text)
 
         return
 
@@ -57,7 +57,7 @@ async def ban(message: types.Message, command: CommandObject, user: User):
         text = ('*Вы забанены в боте!* Ваши действия теперь игнорируются и не будут обрабатываться.\n'
                 'Если вы считаете, что произошла ошибка обратитесь к администрации.\n'
                 'https://www.youtube.com/watch?v=XeoS-zsGVCs')
-        await config.Telegram.bot.send_message(ban_id, text)
+        await config.bot.send_message(ban_id, text)
 
     except:
         ...
@@ -84,7 +84,7 @@ async def unban(message: types.Message, command: CommandObject):
     await message.reply(f'Пользователь `{ban_id}` разбанен.')
 
     try:
-        await config.Telegram.bot.send_message(ban_id, 'Вы разбанены в боте.')
+        await config.bot.send_message(ban_id, 'Вы разбанены в боте.')
 
     except:
         ...

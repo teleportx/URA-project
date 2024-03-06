@@ -22,7 +22,7 @@ async def main():
         token=config.Telegram.token,
         parse_mode='markdown',
     )
-    config.Telegram.bot = bot
+    config.bot = bot
 
     dp = Dispatcher(storage=storage)
     middlewares.setup(dp)

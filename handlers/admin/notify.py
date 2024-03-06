@@ -55,7 +55,7 @@ async def notify_get_message(message: types.Message, state: FSMContext):
     await state.set_state(SendNotify.submit)
 
     await message.delete()
-    await config.Telegram.bot.edit_message_text(
+    await config.bot.edit_message_text(
         f'Предпросмотр отправляемого сообщения:\n{text}\n\nПодтверждаем отправку?',
         message.chat.id,
         last_msg,
