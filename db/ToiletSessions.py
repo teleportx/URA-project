@@ -1,8 +1,7 @@
-from datetime import datetime
 from enum import IntEnum
 
-from tortoise.models import Model
 from tortoise import fields
+from tortoise.models import Model
 
 from db.fields import AutoNowDatetimeField
 

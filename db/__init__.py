@@ -1,6 +1,7 @@
 import urllib.parse
 
 from tortoise import Tortoise
+
 from config import DB as cDB
 
 

@@ -7,7 +7,6 @@ import config
 import db
 import handlers
 import middlewares
-
 import setup_logger
 
 setup_logger.__init__('Bot Service')

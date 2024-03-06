@@ -1,5 +1,4 @@
 import asyncio
-import logging
 
 from aiogram import Router, F
 from aiogram import types

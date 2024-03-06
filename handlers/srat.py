@@ -1,16 +1,13 @@
-import logging
 from datetime import datetime
 
 import aiogram
 from aiogram import types, Router, F
 from aiogram.enums import ChatType
-from aiogram.types import ChatPermissions, InlineKeyboardButton
-from aiogram.utils.keyboard import InlineKeyboardBuilder
 from loguru import logger
 
 import config
-from db.User import User
 from db.ToiletSessions import SretSession, SretType
+from db.User import User
 from filters.user import UserAuthFilter
 from keyboards import sret_keyboard
 from keyboards.srat_var_keyboard import SretActions

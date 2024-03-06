@@ -1,4 +1,3 @@
-import logging
 from os import environ
 
 from aiogram import Bot

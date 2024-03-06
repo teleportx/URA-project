@@ -1,9 +1,9 @@
 from abc import ABC
 from typing import Any, Dict, Callable
 
+import tortoise.transactions
 from aiogram.types import Update
 
-import tortoise.transactions
 from middlewares.util import UtilMiddleware
 
 

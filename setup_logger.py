@@ -4,9 +4,9 @@ import os
 import platform
 from pathlib import Path
 
-import config
-
 from loguru import logger
+
+import config
 
 
 class InterceptHandler(logging.Handler):

@@ -1,10 +1,10 @@
 from aiogram import Router
 
-from . import start
-from . import srat
-from . import credits
 from . import admin
+from . import credits
 from . import groups
+from . import srat
+from . import start
 
 router = Router()
 
