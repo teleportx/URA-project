@@ -1,8 +1,6 @@
 from aiogram import Router
 from aiogram import types
 from aiogram.filters import Command
-from aiogram.fsm.context import FSMContext
-from aiogram.utils.keyboard import ReplyKeyboardBuilder
 
 from filters.user import UserAuthFilter
 from keyboards import srat_var_keyboard
@@ -25,4 +23,4 @@ async def start(message: types.Message, first_joined: bool):
 
         await message.answer(text)
 
-    await message.reply('Выберете действие.', reply_markup=srat_keyboard.get())
+    await message.reply('Выберете действие.', reply_markup=srat_var_keyboard.get())

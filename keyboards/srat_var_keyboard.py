@@ -15,7 +15,7 @@ def get() -> ReplyKeyboardMarkup:
     kb = ReplyKeyboardBuilder()
 
     for el in SretActions:
-        kb.button(el)
+        kb.button(text=el.value)
 
     kb.adjust(2)
 
