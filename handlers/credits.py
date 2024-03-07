@@ -23,7 +23,7 @@ text = (f'*УРА - Уведомление Ректальных Активнос
         f'```\n\n'
         f'Software Engineer - [Teleport](https://github.com/teleportx/)\n'
         f'Project Manager - [Алексей Шаблыкин](https://t.me/AllShabCH)\n'
-        f'DevOps - [uuuuuno](https://github.com/uuuuuno/)\n')
+        f'DevOps Engineer - [uuuuuno](https://github.com/uuuuuno/)\n')
 
 
 @router.message(Command("credits"))
