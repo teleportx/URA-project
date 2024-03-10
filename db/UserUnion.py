@@ -14,8 +14,8 @@ class Group(Model):
     name = fields.CharField(max_length=32)
     owner = fields.ForeignKeyField('models.User', related_name='groups_owned')
 
-    members = fields.ManyToManyField('models.User', related_name='groups_member')
-    requests = fields.ManyToManyField('models.User', related_name='groups_requested')
+    members = fields.ManyToManyField('models.User', related_name='groups_member', through='group_member')
+    requests = fields.ManyToManyField('models.User', related_name='groups_requested', through='group_request')
 
     notify_perdish = fields.BooleanField(default=True)
     password = fields.IntField(default=generate_password)
