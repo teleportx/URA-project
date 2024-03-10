@@ -62,7 +62,11 @@ async def send(user: User, sret: int):
                                      sret_type=SretType.PERNUL, autoend=False)
 
     # Send notifications
-    users_send = await User.filter(uid__not=user.uid).only('uid')
+    users_send = set()
+    async for group in user.groups_member:
+        users_send = users_send.union(set(await group.members.all()))
+
+    users_send.remove(user)
 
     for send_to in users_send:
         try:
