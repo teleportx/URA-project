@@ -57,7 +57,9 @@ async def join_group_decline(callback: types.CallbackQuery):
     await group.requests.remove(join_user)
 
     request_status = ["ОТКЛОНЕНА", "ОДОБРЕНА"][join_group_data.result]
-    await callback.message.edit_text(callback.message.text + f'\n\n*{request_status}*')
+    text = f'Пользователь *{join_user.name}* (`{join_user.uid}`) хочет вступить к вам в группу *{group.name}* (`{group.pk}`)'
+
+    await callback.message.edit_text(text + f'\n\n*{request_status}*')
     join_user_message = await config.bot.send_message(join_group_data.uid, f'Ваша заявкам в группу *{group.name} {request_status}*')
 
     if not join_group_data.result:
@@ -66,7 +68,7 @@ async def join_group_decline(callback: types.CallbackQuery):
     if not join_user.admin and await join_user.groups_member.all().count() >= 5:
         await callback.answer('Пользователь не добавлен в группу так как количество групп к котором он присоединен достигло максимума.',
                               show_alert=True)
-        await callback.message.edit_text(callback.message.text + f'\n\n*{request_status} НЕ ДОБАВЛЕН* (лимит групп)')
+        await callback.message.edit_text(text + f'\n\n*{request_status} НЕ ДОБАВЛЕН* (лимит групп)')
 
         await join_user_message.reply('Вы не были в группу так как количество групп к котором вы присоединенились достигло максимума.')
         return
