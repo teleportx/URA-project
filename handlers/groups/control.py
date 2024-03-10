@@ -66,6 +66,7 @@ async def group_writing_name(message: types.Message, state: FSMContext, user: Us
     if state_data.get('group_id') is not None:
         group = await Group.filter(pk=state_data.get('group_id')).get()
         group.name = message.text
+        await group.save()
 
         info_message = await message.answer('Название группы успешно изменено!')
 
