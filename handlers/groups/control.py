@@ -70,7 +70,7 @@ async def group_writing_name(message: types.Message, state: FSMContext, user: Us
         info_message = await message.answer('Название группы успешно изменено!')
 
         await state.clear()
-        await show_group(None, group, user, last_msg, user.uid)
+        await show_group(None, group, user, state, last_msg, user.uid)
 
         await asyncio.sleep(3)
         await info_message.delete()
@@ -115,12 +115,12 @@ async def show_group(callback: types.CallbackQuery, group: Group, user: User, st
 
 
 @router.callback_query(groups_keyboard.GroupCallback.filter(F.action == 'password'))
-async def change_group_password(callback: types.CallbackQuery, group: Group, user: User):
+async def change_group_password(callback: types.CallbackQuery, group: Group, user: User, state: FSMContext):
     group.password = Group.generate_password()
     await group.save()
 
     await callback.answer('Пароль группы изменен.')
-    await show_group(callback, group, user)
+    await show_group(callback, group, user, state)
 
 
 @router.callback_query(groups_keyboard.GroupCallback.filter(F.action == 'name'))
