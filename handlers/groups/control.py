@@ -106,7 +106,6 @@ async def show_group(callback: types.CallbackQuery, group: Group, state: FSMCont
         return
 
     await callback.message.edit_text(text, reply_markup=groups_keyboard.get_group(group.pk))
-    # TODO: group contol action:  members
 
 
 @router.callback_query(groups_keyboard.GroupCallback.filter(F.action == 'password'))
