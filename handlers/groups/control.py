@@ -38,8 +38,8 @@ async def groups_menu_callback(callback: types.CallbackQuery, user: User, state:
 # CREATE GROUP
 @router.callback_query(groups_keyboard.GroupCallback.filter(F.action == 'create'))
 async def create_group(callback: types.CallbackQuery, state: FSMContext, user: User):
-    if not user.admin and await Group.filter(owner=user).count() >= 5:
-        await callback.answer('Вы не можете владеть более чем 5 группами.', show_alert=True)
+    if not user.admin and await user.groups_member.all().count() >= 5:
+        await callback.answer('Вы не можете состоять более чем в 5 группах.', show_alert=True)
         return
 
     await callback.message.edit_text(
@@ -70,7 +70,7 @@ async def group_writing_name(message: types.Message, state: FSMContext, user: Us
         info_message = await message.answer('Название группы успешно изменено!')
 
         await state.clear()
-        await show_group(None, group, last_msg, user.uid)
+        await show_group(None, group, user, last_msg, user.uid)
 
         await asyncio.sleep(3)
         await info_message.delete()
@@ -88,7 +88,7 @@ async def group_writing_name(message: types.Message, state: FSMContext, user: Us
 
 # GROUP CONTROL
 @router.callback_query(groups_keyboard.GroupCallback.filter(F.action == 'show'))
-async def show_group(callback: types.CallbackQuery, group: Group, state: FSMContext, message_id: int = None,
+async def show_group(callback: types.CallbackQuery, group: Group, user: User, state: FSMContext, message_id: int = None,
                      chat_id: int = None):
     await state.clear()
     owner = await group.owner
@@ -101,20 +101,26 @@ async def show_group(callback: types.CallbackQuery, group: Group, state: FSMCont
             f'_Создана {group.created_at}_\n\n'
             f'Ссылка-приглашение:\n`{invite_link}`')
 
+    has_access = owner == user or user.admin
+    if not has_access:
+        text = '\n'.join(text.splitlines()[:3])
+
     if callback is None:
-        await config.bot.edit_message_text(text, chat_id, message_id, reply_markup=groups_keyboard.get_group(group.pk))
+        await config.bot.edit_message_text(text, chat_id, message_id,
+                                           reply_markup=groups_keyboard.get_group(group.pk, has_access))
         return
 
-    await callback.message.edit_text(text, reply_markup=groups_keyboard.get_group(group.pk))
+    await callback.message.edit_text(text,
+                                     reply_markup=groups_keyboard.get_group(group.pk, has_access))
 
 
 @router.callback_query(groups_keyboard.GroupCallback.filter(F.action == 'password'))
-async def change_group_password(callback: types.CallbackQuery, group: Group):
+async def change_group_password(callback: types.CallbackQuery, group: Group, user: User):
     group.password = Group.generate_password()
     await group.save()
 
     await callback.answer('Пароль группы изменен.')
-    await show_group(callback, group)
+    await show_group(callback, group, user)
 
 
 @router.callback_query(groups_keyboard.GroupCallback.filter(F.action == 'name'))
@@ -191,3 +197,15 @@ async def call_submit_delete_group_member(callback: types.CallbackQuery, user: U
         await group.members.remove(await User.filter(pk=group_data.uid).get())
 
     await group_members(callback, group)
+
+
+@router.callback_query(groups_keyboard.GroupCallback.filter(F.action == 'leave'))
+async def leave_from_group(callback: types.CallbackQuery, group: Group, user: User, state: FSMContext):
+    await group.members.remove(user)
+    await callback.answer('Вы успешно покинули группу.')
+    await groups_menu_callback(callback, user, state)
+
+    owner = await group.owner
+
+    await config.bot.send_message(owner.uid, f'Пользователь *{user.name}* (`{user.uid}`) покинул группу *{group.name}* (`{group.pk}`)')
+
