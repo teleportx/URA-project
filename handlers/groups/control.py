@@ -196,6 +196,7 @@ async def call_submit_delete_group_member(callback: types.CallbackQuery, user: U
 
     else:
         await group.members.remove(await User.filter(pk=group_data.uid).get())
+        await config.bot.send_message(group_data.uid, f'Вы исключены из групппы *{group.name}* (`{group.pk}`)')
 
     await group_members(callback, group)
 
