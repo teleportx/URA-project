@@ -40,7 +40,11 @@ async def join_group(message: types.Message, command: CommandObject, user: User)
                                   f'Пользователь *{user.name}* (`{user.uid}`) хочет вступить к вам в группу *{group.pk}* (`{group.pk}`)',
                                   reply_markup=join_group_keyboard.get(user.uid, group.pk))
 
-    await message.reply(f'Ваша заявка на присоединение к группе *{group.name}* отправлена и ожидает одобрения.')
+    text = ''
+    if (await user.groups_member.all().count() + await user.groups_requested.all().count()) >= 5:
+        text = '\n\n_Учтите, что при принять все поданные вами заявки не получится, так как вы достигните лимит групп._'
+
+    await message.reply(f'Ваша заявка на присоединение к группе *{group.name}* отправлена и ожидает одобрения.' + text)
 
 
 @router.callback_query(join_group_keyboard.JoinGroupCallback.filter())
@@ -54,7 +58,17 @@ async def join_group_decline(callback: types.CallbackQuery):
 
     request_status = ["ОТКЛОНЕНА", "ОДОБРЕНА"][join_group_data.result]
     await callback.message.edit_text(callback.message.text + f'\n\n*{request_status}*')
-    await config.bot.send_message(join_group_data.uid, f'Ваша заявкам в группу *{group.name} {request_status}*')
+    join_user_message = await config.bot.send_message(join_group_data.uid, f'Ваша заявкам в группу *{group.name} {request_status}*')
 
-    if join_group_data.result:
-        await group.members.add(join_user)
+    if not join_group_data.result:
+        return
+
+    if not join_user.admin and await join_user.groups_member.all().count() >= 5:
+        await callback.answer('Пользователь не добавлен в группу так как количество групп к котором он присоединен достигло максимума.',
+                              show_alert=True)
+        await callback.message.edit_text(callback.message.text + f'\n\n*{request_status} НЕ ДОБАВЛЕН* (лимит групп)')
+
+        await join_user_message.reply('Вы не были в группу так как количество групп к котором вы присоединенились достигло максимума.')
+        return
+
+    await group.members.add(join_user)
