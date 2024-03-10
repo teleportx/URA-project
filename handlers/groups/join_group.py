@@ -37,7 +37,7 @@ async def join_group(message: types.Message, command: CommandObject, user: User)
 
     await group.requests.add(user)
     await config.bot.send_message((await group.owner.only('uid').get()).uid,
-                                  f'Пользователь *{user.name}* (`{user.uid}`) хочет вступить к вам в группу *{group.pk}* (`{group.pk}`)',
+                                  f'Пользователь *{user.name}* (`{user.uid}`) хочет вступить к вам в группу *{group.name}* (`{group.pk}`)',
                                   reply_markup=join_group_keyboard.get(user.uid, group.pk))
 
     text = ''
