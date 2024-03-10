@@ -81,7 +81,7 @@ def get_group(group_id: int, owned: bool) -> InlineKeyboardMarkup:
     ))
 
     kb.row(InlineKeyboardButton(
-        text='Изменить пароль',
+        text='Изменить ссылку',
         callback_data=GroupCallback(group=group_id, action='password').pack()
     ))
 
