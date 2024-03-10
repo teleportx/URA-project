@@ -93,7 +93,7 @@ async def show_group(callback: types.CallbackQuery, group: Group, state: FSMCont
     await state.clear()
     owner = await group.owner
 
-    invite_link = f'https://t.me/{(await config.bot.get_me()).username}?start=IG{group.pk}:{group.password}'
+    invite_link = f'https://t.me/{(await config.bot.get_me()).username}?start=IG{group.pk}P{group.password}'
     text = (f'Группа *{group.name}* (`{group.pk}`)\n'
             f'Владелец *{owner.name}* (`{owner.uid}`)\n'
             f'Человек *{await group.members.all().count()}/21*\n'
