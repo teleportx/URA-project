@@ -41,7 +41,7 @@ async def join_group(message: types.Message, command: CommandObject, user: User)
                                   reply_markup=join_group_keyboard.get(user.uid, group.pk))
 
     text = ''
-    if (await user.groups_member.all().count() + await user.groups_requested.all().count()) >= 5:
+    if (await user.groups_member.all().count() + await user.groups_requested.all().count()) > 5:
         text = '\n\n_Учтите, что при принять все поданные вами заявки не получится, так как вы достигните лимит групп._'
 
     await message.reply(f'Ваша заявка на присоединение к группе *{group.name}* отправлена и ожидает одобрения.' + text)
