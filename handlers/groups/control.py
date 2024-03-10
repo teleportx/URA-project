@@ -8,7 +8,7 @@ from aiogram.fsm.state import StatesGroup, State
 import config
 from db.User import User
 from db.UserUnion import Group
-from keyboards import groups_keyboard
+from keyboards.group import groups_keyboard
 from middlewares.group import GroupMiddleware
 
 router = Router()

@@ -3,9 +3,8 @@ from typing import Any, Dict, Callable
 
 from aiogram import types
 
-from db.User import User, Ban
 from db.UserUnion import Group
-from keyboards import groups_keyboard
+from keyboards.group import groups_keyboard
 from middlewares.util import UtilMiddleware
 
 

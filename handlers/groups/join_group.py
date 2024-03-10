@@ -6,7 +6,7 @@ import config
 from db.User import User
 from db.UserUnion import Group
 from filters.command_args import CommandArgsStartswith
-from keyboards import join_group_keyboard
+from keyboards.group import join_group_keyboard
 
 router = Router()
 
