@@ -3,8 +3,16 @@ from typing import Any, Dict, Callable
 
 from aiogram import types
 
+import config
 from db.User import User, Ban
 from middlewares.util import UtilMiddleware
+
+
+first_join_message_text = '''Добро пожаловать в УРА!
+
+*Команды:*
+/guide - Гайд по боту
+/credits - О боте'''
 
 
 class AuthMiddleware(UtilMiddleware, ABC):
@@ -19,14 +27,12 @@ class AuthMiddleware(UtilMiddleware, ABC):
         if await Ban.filter(uid=user.id).exists():
             return
 
-        first_joined = False
         db_user = await User.filter(uid=user.id).get_or_none()
 
         if db_user is None:
-            first_joined = True
             db_user = await User.create(uid=user.id, name=user.full_name)
+            await config.bot.send_message(user.id, first_join_message_text)
 
         data['user'] = db_user
-        data['first_joined'] = first_joined
 
         return await handler(event, data)
