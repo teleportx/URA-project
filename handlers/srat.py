@@ -3,14 +3,13 @@ from aiogram.enums import ChatType
 
 from db.ToiletSessions import SretSession
 from db.User import User
-from filters.user import UserAuthFilter
 from keyboards.srat_var_keyboard import SretActions
 from utils import send_srat_notification
 
 router = Router()
 
 
-@router.message(F.text.startswith('Я'), UserAuthFilter(), F.chat.type == ChatType.PRIVATE)
+@router.message(F.text.startswith('Я'), F.chat.type == ChatType.PRIVATE)
 async def send_srat(message: types.Message, user: User):
     if message.text == SretActions.SRET.value:
         sret = 1

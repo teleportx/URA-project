@@ -3,13 +3,12 @@ from aiogram import types
 from aiogram.filters import Command
 
 from filters.command_args import CommandArgsStartswith
-from filters.user import UserAuthFilter
 from keyboards import srat_var_keyboard
 
 router = Router()
 
 
-@router.message(Command("start"), UserAuthFilter(), CommandArgsStartswith())
+@router.message(Command("start"), CommandArgsStartswith())
 async def start(message: types.Message, first_joined: bool):
     if first_joined:
         text = (f'Добро пожаловать в УРА!\n\n'
