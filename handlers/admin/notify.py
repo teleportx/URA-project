@@ -23,19 +23,7 @@ class SendNotify(StatesGroup):
 @router.message(Command("notify"), UserAuthFilter(admin=True))
 async def notify(message: types.Message, state: FSMContext):
     text = (f'Отправьте текст, который хотите отправить в качестве уведомления.\n\n'
-            f'*Правила форматирования:*\n\n'
-            f'-\*- - code style (like \`\`\`)\n'
-            f'```Header\n'
-            f'text```\n\n'
-            f''
-            f'\`\` - copyable\n'
-            f'`text`\n\n'
-            f''
-            f'\_ - cursive\n'
-            f'_text_\n\n'
-            f''
-            f'\* - bold\n'
-            f'*text*\n\n')
+            f'*Правила форматирования:*\n_Такое же как в обычных сообщениях_')
 
     await message.delete()
 
@@ -48,15 +36,11 @@ async def notify(message: types.Message, state: FSMContext):
 async def notify_get_message(message: types.Message, state: FSMContext):
     last_msg = (await state.get_data()).get('last_msg')
 
-    text = (message.text
-            .replace('``', '`')
-            .replace('-*-', '```'))
-    await state.update_data({'text': text})
     await state.set_state(SendNotify.submit)
+    await state.update_data({'message_id': message.message_id})
 
-    await message.delete()
     await config.bot.edit_message_text(
-        f'Предпросмотр отправляемого сообщения:\n{text}\n\nПодтверждаем отправку?',
+        f'Получили, Подтверждаем отправку?',
         message.chat.id,
         last_msg,
         reply_markup=notify_keyboard.get(),
@@ -74,15 +58,15 @@ async def cancel_notify(callback: types.CallbackQuery, state: FSMContext):
 
 @router.callback_query(SendNotify.submit, notify_keyboard.Notify.filter(F.action == 'submit'))
 async def submit_notify(callback: types.CallbackQuery, state: FSMContext, user: User):
-    text = (await state.get_data()).get('text')
+    original_message_id = (await state.get_data()).get('message_id')
 
     users = await User.all()
-    notify_instance = await Notify.create(text=text, initiated_by=user, init_queue_size=len(users))
+    notify_instance = await Notify.create(message_id=original_message_id, initiated_by=user, init_queue_size=len(users))
     await notify_instance.queue.add(*users)
 
     admin_text = (f'Отправка уведомлений начата.\n'
                   f'Айди уведомления `{notify_instance.pk}`\n'
-                  f'Получить актуальную информацию о рассылке: `/nstatus {notify_instance.pk}`')
+                  f'Получить актуальную информацию о рассылке:\n`/nstatus {notify_instance.pk}`')
     await callback.message.edit_text(admin_text)
 
     await state.clear()
@@ -109,7 +93,7 @@ async def notify(message: types.Message, command : CommandObject):
         return
     notify_id = int(command.args)
 
-    notify_instance = await Notify.filter(id=notify_id).get_or_none()
+    notify_instance = await Notify.filter(pk=notify_id).get_or_none()
     if notify_instance is None:
         await message.reply('Уведомление не найдено.')
         return

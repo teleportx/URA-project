@@ -21,7 +21,7 @@ class Ban(Model):
 
 
 class Notify(Model):
-    text = fields.TextField()
+    message_id = fields.BigIntField(pk=True, unique=True)
     queue = fields.ManyToManyField('models.User')
 
     initiated_by = fields.ForeignKeyField('models.User', related_name='notifys_inited')

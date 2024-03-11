@@ -19,7 +19,7 @@ async def notify_loop(bot: Bot):
         async for notify in notifys:
             async for send_to in notify.queue.all():
                 try:
-                    await bot.send_message(send_to.uid, notify.text)
+                    await bot.copy_message(send_to.uid, (await notify.initiated_by).uid, notify.message_id)
 
                 except Exception as e:
                     notify.errors += 1
