@@ -66,7 +66,11 @@ async def send(user: User, sret: int):
     async for group in user.groups_member:
         users_send = users_send.union(set(await group.members.all()))
 
-    users_send.remove(user)
+    try:
+        users_send.remove(user)
+
+    except KeyError:
+        ...
 
     for send_to in users_send:
         try:
