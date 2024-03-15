@@ -1,3 +1,4 @@
+from asyncio import AbstractEventLoop
 from os import environ
 
 from aiogram import Bot
@@ -7,10 +8,14 @@ load_dotenv()
 
 DEBUG = environ.get('DEBUG') == "TRUE"
 bot: Bot
+loop: AbstractEventLoop
 
 
 class Telegram:
     token = environ.get('TOKEN')
+    logs_token = environ.get('TOKEN_LOGS')
+
+    logs_group_id = environ.get('LOGS_GROUP_ID')
 
 
 class Logger:

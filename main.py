@@ -2,6 +2,7 @@ import asyncio
 
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.redis import RedisStorage
+from loguru import logger
 
 import config
 import db
@@ -23,6 +24,7 @@ async def main():
         parse_mode='markdown',
     )
     config.bot = bot
+    config.loop = asyncio.get_running_loop()
 
     dp = Dispatcher(storage=storage)
     middlewares.setup(dp)

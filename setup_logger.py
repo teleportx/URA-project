@@ -2,11 +2,16 @@ import gzip
 import logging
 import os
 import platform
+from datetime import datetime
 from pathlib import Path
 
+from aiogram import Bot
+from aiogram.types import BufferedInputFile
 from loguru import logger
 
 import config
+
+project_name: str
 
 
 class InterceptHandler(logging.Handler):
@@ -30,7 +35,35 @@ class InterceptHandler(logging.Handler):
         logger.opt(exception=record.exc_info).log(level, record.getMessage())
 
 
-def __init__(project_name: str):
+class TelegramHandler(logging.Handler):
+    def __init__(self):
+        super().__init__()
+
+        self.bot = Bot(
+            token=config.Telegram.logs_token,
+            parse_mode='markdown',
+        )
+
+    async def _send_notification(self, record: logging.LogRecord):
+        text = (f'⚠️ *{record.levelname} | {project_name}*\n\n'
+                f'Caught log in file.')
+
+        try:
+            io_log = BufferedInputFile(record.getMessage().encode(), filename=f'{datetime.now()}.log')
+            await self.bot.send_document(config.Telegram.logs_group_id, io_log, caption=text)
+
+        except Exception as e:
+            print(':CRITICAL: ERROR WHILE SENDING LOGS TO TG: ')
+            print(e)
+
+    def emit(self, record: logging.LogRecord):
+        config.loop.create_task(self._send_notification(record))
+
+
+def __init__(__project_name: str):
+    global project_name
+
+    project_name = __project_name
     project_name_u = project_name.replace(" ", "-").lower()
 
     logs_dir_path = Path(__file__).resolve().__str__().replace('setup_logger.py', 'logs')
@@ -69,3 +102,6 @@ def __init__(project_name: str):
 
     logger.info(f"Python version: {platform.python_version()}")
     logger.info(f"Running on: {platform.system()} {platform.release()} ({os.name})")
+
+    if not config.DEBUG:
+        logger.add(TelegramHandler(), level=logging.ERROR)
