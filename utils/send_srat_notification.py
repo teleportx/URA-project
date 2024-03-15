@@ -42,7 +42,7 @@ async def send(user: User, sret: int):
                                  sret_type=SretType.DRISHET if sret == 2 else SretType.SRET)
 
     else:
-        session = await SretSession.filter(user=user, end=None).get_or_none()
+        session = await SretSession.filter(user=user, end=None).first()
 
         if session is not None:
             session.end = datetime.now()
