@@ -26,6 +26,14 @@ async def end_loop():
         async for session in sessions:
             if delete_time >= session.start:
                 await session.delete()
+
+                try:
+                    await config.bot.send_message((await session.user).uid,
+                                                  '*Вы умерли в туалете!*\n'
+                                                  'Мы удалили вашу сессию сранья так как вы слишком долго срете, надеемся вы сейчас живы, и просто забыли завершить сранье, впредь будьте внимательнее.')
+                except:
+                    ...
+
                 continue
 
             session.end = datetime.now()
