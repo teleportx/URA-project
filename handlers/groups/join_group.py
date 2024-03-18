@@ -55,7 +55,7 @@ async def join_group_decline(callback: types.CallbackQuery):
 
     join_user = await User.filter(pk=join_group_data.uid).get()
     await group.requests.remove(join_user)
-    if join_group_data.result and (await group.members.all().count()) >= 1:
+    if join_group_data.result and (await group.members.all().count()) >= 21:
         await callback.answer('Вы достигли максимум человек в группе.',
                               show_alert=True)
         return
