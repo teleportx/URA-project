@@ -41,7 +41,7 @@ async def join_group(message: types.Message, command: CommandObject, user: User)
                                   reply_markup=join_group_keyboard.get(user.uid, group.pk))
 
     text = ''
-    if (await user.groups_member.all().count() + await user.groups_requested.all().count()) > 5:
+    if (await user.groups_member.all().count() + await user.groups_requested.all().count()) > config.Constants.member_group_limit:
         text = '\n\n_Учтите, что при принять все поданные вами заявки не получится, так как вы достигните лимит групп._'
 
     await message.reply(f'Ваша заявка на присоединение к группе *{group.name}* отправлена и ожидает одобрения.' + text)
@@ -55,7 +55,7 @@ async def join_group_decline(callback: types.CallbackQuery):
 
     join_user = await User.filter(pk=join_group_data.uid).get()
     await group.requests.remove(join_user)
-    if join_group_data.result and (await group.members.all().count()) >= 21:
+    if join_group_data.result and (await group.members.all().count()) >= config.Constants.group_members_limit:
         await callback.answer('Вы достигли максимум человек в группе.',
                               show_alert=True)
         return
@@ -69,7 +69,7 @@ async def join_group_decline(callback: types.CallbackQuery):
     if not join_group_data.result:
         return
 
-    if not join_user.admin and await join_user.groups_member.all().count() >= 5:
+    if not join_user.admin and await join_user.groups_member.all().count() >= config.Constants.member_group_limit:
         await callback.answer('Пользователь не добавлен в группу так как количество групп к котором он присоединен достигло максимума.',
                               show_alert=True)
         await callback.message.edit_text(text + f'\n\n*{request_status} НЕ ДОБАВЛЕН* (лимит групп)')
