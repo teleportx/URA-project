@@ -1,8 +1,0 @@
-version: '2.2'
-services:
-   yasru_bot:
-       build: .
-       working_dir: /app
-       command: >
-           python3.10 -m main
-       restart: unless-stopped

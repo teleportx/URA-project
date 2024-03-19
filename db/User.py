@@ -1,30 +1,35 @@
-from datetime import datetime
+from tortoise import fields
+from tortoise.models import Model
 
-from peewee import *
-
-from .base import BaseModel
-
-
-class PermissionField(BooleanField):
-    PERMISSION_FIELD = True
-
-    def __init__(self):
-        super().__init__(default=False)
+from db.fields import PermissionField, AutoNowDatetimeField
 
 
-class User(BaseModel):
-    uid = BigIntegerField(primary_key=True, unique=True)
-    name = CharField(max_length=64, default='New user')
+class User(Model):
+    uid = fields.BigIntField(pk=True, unique=True)
+    name = fields.CharField(max_length=129)
     admin = PermissionField()
-    sret = DateTimeField(null=True, default=None)
-    perdezhs = BigIntegerField(default=0)
+
+    created_at = AutoNowDatetimeField()
 
 
-class SretSession(BaseModel):
-    user = ForeignKeyField(User, on_delete='CASCADE')
-    start = DateTimeField()
-    end = DateTimeField(default=datetime.now)
+class Ban(Model):
+    uid = fields.BigIntField(pk=True, unique=True)
+    banned_by = fields.BigIntField(null=True)
+    reason = fields.TextField()
 
-    @classmethod
-    def create_session(cls, user: User):
-        cls.create(user=user, start=user.sret)
+    created_at = AutoNowDatetimeField()
+
+
+class Notify(Model):
+    message_id = fields.BigIntField(pk=True, unique=True)
+    queue = fields.ManyToManyField('models.User')
+
+    initiated_by = fields.ForeignKeyField('models.User', related_name='notifys_inited')
+    init_queue_size = fields.BigIntField()
+    errors = fields.BigIntField(default=0)
+
+    created_at = AutoNowDatetimeField()
+
+    @property
+    def completed(self):
+        return len(self.queue) == 0

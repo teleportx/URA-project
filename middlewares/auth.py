@@ -3,8 +3,16 @@ from typing import Any, Dict, Callable
 
 from aiogram import types
 
-from db.User import User
+import config
+from db.User import User, Ban
 from middlewares.util import UtilMiddleware
+
+
+first_join_message_text = '''Добро пожаловать в УРА!
+
+*Команды:*
+/guide - Гайд по боту
+/credits - О боте'''
 
 
 class AuthMiddleware(UtilMiddleware, ABC):
@@ -16,14 +24,15 @@ class AuthMiddleware(UtilMiddleware, ABC):
     ) -> Any:
         user = self.get_user(event)
 
-        data['user'] = self.get_bot_user(user)
+        if await Ban.filter(uid=user.id).exists():
+            return
+
+        db_user = await User.filter(uid=user.id).get_or_none()
+
+        if db_user is None:
+            db_user = await User.create(uid=user.id, name=user.full_name)
+            await config.bot.send_message(user.id, first_join_message_text)
+
+        data['user'] = db_user
+
         return await handler(event, data)
-
-    def get_bot_user(self, user: types.User) -> User:
-        db_user = User.select().where(User.uid == user.id).get_or_none()
-
-        if db_user is not None and db_user.name != user.full_name:
-            db_user.name = user.full_name
-            db_user.save()
-
-        return db_user

@@ -1,4 +1,6 @@
 aiogram==3.3.0
-python-dotenv~=1.0.0
-peewee==3.17.0
-psycopg2-binary==2.9.9
+python-dotenv==1.0.1
+asyncpg==0.29.0
+redis==5.0.2
+tortoise-orm==0.20.0
+loguru==0.7.2
