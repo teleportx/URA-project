@@ -6,6 +6,11 @@ COPY requirements.txt requirements.txt
 RUN pip3 install -r requirements.txt
 
 
-COPY . .
+COPY ./notify_service .
+
+COPY db db
+COPY config.py config.py
+COPY setup_logger.py setup_logger.py
+COPY .env .env
 
 CMD ["python3.10", "-m", "main"]

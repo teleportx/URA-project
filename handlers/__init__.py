@@ -1,13 +1,19 @@
 from aiogram import Router
 
-from . import start
+from . import cancel
+from . import admin
+from . import info
+from . import groups
 from . import srat
-from . import other_commands
-from . import group_perdish
+from . import start
+from . import setnickname
 
 router = Router()
 
+router.include_router(cancel.router)
 router.include_router(start.router)
 router.include_router(srat.router)
-router.include_router(group_perdish.router)
-router.include_router(other_commands.router)
+router.include_router(info.router)
+router.include_router(admin.router)
+router.include_router(groups.router)
+router.include_router(setnickname.router)

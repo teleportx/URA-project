@@ -1,9 +1,9 @@
 from abc import ABC
 from typing import Any, Dict, Callable
 
+import tortoise.transactions
 from aiogram.types import Update
 
-from db.base import db
 from middlewares.util import UtilMiddleware
 
 
@@ -14,5 +14,5 @@ class DatabaseMiddleware(UtilMiddleware, ABC):
         event: Update,
         data: Dict[str, Any]
     ) -> Any:
-        with db:
+        async with tortoise.transactions.in_transaction():
             return await handler(event, data)
