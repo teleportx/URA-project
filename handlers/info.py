@@ -25,7 +25,7 @@ credits_text = (f'*УРА - Уведомление Ректальных Акти
                 f'```\n\n'
                 f'Software Engineer - [Teleport](https://github.com/teleportx/)\n'
                 f'Project Manager - [Алексей Шаблыкин](https://t.me/AllShabCH)\n'
-                f'DevOps Engineer - [uuuuuuno](https://github.com/uuuuuno/)\n')
+                f'DevOps Engineer - [uuuuuno](https://github.com/uuuuuno/)\n')
 
 
 guide_text = f'''*Гайд по работе с ботом.*
