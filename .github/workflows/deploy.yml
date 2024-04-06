@@ -1,0 +1,29 @@
+name: Deploy to server
+
+#on:
+#  push:
+#    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v2
+
+    - name: Netbird Connect
+      id: netbird
+      uses: Alemiz112/netbird-connect-action@v1
+      with:
+        setup-key: ${{ secrets.NETBIRD_SETUP_KEY }}
+
+    - name: Deploy
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_KEY }}
+        script: |
+          cd urabot
+          sh build.sh
