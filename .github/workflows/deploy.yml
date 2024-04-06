@@ -19,4 +19,4 @@ jobs:
         username: ${{ secrets.SSH_USER }}
         password: ${{ secrets.SSH_PASSWORD }}
         script: |
-          sh connect_uuuuuno.sh
+          sh urabot_deploy.sh
