@@ -16,8 +16,9 @@ jobs:
       id: netbird
       uses: Alemiz112/netbird-connect@v1
       with:
-        setup_key: ${{ secrets.NETBIRD_SETUP_KEY }}
         hostname: github_deploy_worker
+      env:
+        SETUP_KEY: ${{ secrets.NETBIRD_SETUP_KEY }}
 
     - name: Deploy
       uses: appleboy/ssh-action@master
