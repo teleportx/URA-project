@@ -12,22 +12,11 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v2
 
-    - name: Netbird Install
-      run: |
-        curl -fsSL https://pkgs.netbird.io/install.sh | sh
-
-    - name: Netbird Connect
-      run: |
-        sudo netbird up --setup-key=${{ secrets.NETBIRD_SETUP_KEY }} --management-url=https://api.netbird.io:443 --hostname=urabot_github_deploy
-
     - name: Deploy
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USER }}
-        key: ${{ secrets.SSH_KEY }}
+        password: ${{ secrets.SSH_PASSWORD }}
         script: |
-          cd URA-project
-          git fetch
-          git pull
-          docker-compose up -d --build
+          sh connect_uuuuuno.sh
