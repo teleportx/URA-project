@@ -13,12 +13,9 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Netbird Connect
-      id: netbird
-      uses: Alemiz112/netbird-connect@v1
-      with:
-        hostname: github_deploy_worker
-        management-url: https://api.netbird.io:443
-        setup-key: ${{ secrets.NETBIRD_SETUP_KEY }}
+      run: |
+        curl -fsSL https://pkgs.netbird.io/install.sh | sh
+        sudo netbird up --setup-key=${{ secrets.NETBIRD_SETUP_KEY }} --hostname=urabot_github_deploy
 
     - name: Deploy
       uses: appleboy/ssh-action@master
