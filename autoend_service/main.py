@@ -17,8 +17,8 @@ setup_logger.__init__('Notify Service')
 
 async def end_loop():
     while True:
-        delete_time = datetime.now(pytz.UTC) - timedelta(hours=1)
-        autoend_time = datetime.now(pytz.UTC) - timedelta(minutes=10)
+        delete_time = datetime.now(pytz.UTC) - timedelta(hours=config.Constants.srat_delete_time)
+        autoend_time = datetime.now(pytz.UTC) - timedelta(minutes=config.Constants.srat_autoend_time)
         sessions = (SretSession
                     .filter(Q(Q(start__lte=delete_time), Q(start__lte=autoend_time, autoend=True), join_type='OR'))
                     .filter(sret_type__in=[SretType.SRET, SretType.DRISHET], end=None))

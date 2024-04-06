@@ -38,8 +38,8 @@ async def groups_menu_callback(callback: types.CallbackQuery, user: User, state:
 # CREATE GROUP
 @router.callback_query(groups_keyboard.GroupCallback.filter(F.action == 'create'))
 async def create_group(callback: types.CallbackQuery, state: FSMContext, user: User):
-    if not user.admin and await user.groups_member.all().count() >= 5:
-        await callback.answer('Вы не можете состоять более чем в 5 группах.', show_alert=True)
+    if not user.admin and await user.groups_member.all().count() >= config.Constants.member_group_limit:
+        await callback.answer(f'Вы не можете состоять более чем в {config.Constants.member_group_limit} группах.', show_alert=True)
         return
 
     await callback.message.edit_text(
@@ -97,7 +97,7 @@ async def show_group(callback: types.CallbackQuery, group: Group, user: User, st
     invite_link = f'https://t.me/{(await config.bot.get_me()).username}?start=IG{group.pk}P{group.password}'
     text = (f'Группа *{group.name}* (`{group.pk}`)\n'
             f'Владелец *{owner.name}* (`{owner.uid}`)\n'
-            f'Человек *{await group.members.all().count()}/21*\n'
+            f'Человек *{await group.members.all().count()}/{config.Constants.group_members_limit}*\n'
             f'Пердежы: *{["Выключены", "Включены"][group.notify_perdish]}*\n\n'
             f'_Создана {group.created_at}_\n\n'
             f'Ссылка-приглашение:\n`{invite_link}`')

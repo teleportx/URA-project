@@ -22,6 +22,14 @@ class Logger:
     max_file_size = 10 * 1024 ** 2
 
 
+class Constants:
+    group_members_limit = 21
+    member_group_limit = 5
+
+    srat_delete_time = 1  # in hours
+    srat_autoend_time = 10  # in minutes
+
+
 class DB:
     host = environ.get('DB_HOST')
     port = int(environ.get('DB_PORT'))
