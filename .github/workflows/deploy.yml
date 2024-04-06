@@ -16,7 +16,7 @@ jobs:
       id: netbird
       uses: Alemiz112/netbird-connect@v1
       with:
-        args: --setup-key ${{ secrets.NETBIRD_SETUP_KEY }}
+        setup-key: ${{ secrets.NETBIRD_SETUP_KEY }}
         hostname: github_deploy_worker
 
     - name: Deploy
