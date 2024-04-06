@@ -8,4 +8,4 @@ RUN pip3 install -r requirements.txt
 
 COPY . .
 
-RUN ["python3.10", "-m", "m"]
+CMD ["python3.10", "-m", "main"]
