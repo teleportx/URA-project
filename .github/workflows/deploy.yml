@@ -20,7 +20,3 @@ jobs:
         password: ${{ secrets.SSH_PASSWORD }}
         script: |
           sh connect_uuuuuno.sh
-          cd URA-project
-          git fetch
-          git pull
-          docker-compose up -d --build
