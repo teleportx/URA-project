@@ -12,7 +12,7 @@ must_not_sret = [1, 2]
 must_sret = [0]
 
 
-async def send(user: User, sret: int):
+def get_message_text(user: User, sret: int):
     if sret == 1:
         text = '⚠️ *ВНИМАНИЕ* ⚠️\n' \
                '`%s` *прямо сейчас* пошел _срать_'
@@ -31,6 +31,12 @@ async def send(user: User, sret: int):
                '`%s` *прямо сейчас* пошел _адски дристать_ лютейшей струей *поноса*'
 
     text %= user.name
+
+    return text
+
+
+async def send(user: User, sret: int):
+    text = get_message_text(user, sret)
 
     # Send self
     self_message = await config.bot.send_message(user.uid, text,

@@ -9,3 +9,9 @@ class UtilMiddleware(BaseMiddleware):
 
         elif event.callback_query:
             return event.callback_query.from_user
+
+        elif event.inline_query:
+            return event.inline_query.from_user
+
+        elif event.chosen_inline_result:
+            return event.chosen_inline_result.from_user
