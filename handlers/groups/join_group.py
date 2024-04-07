@@ -1,17 +1,16 @@
-from aiogram import Router
+from aiogram import Router, F
 from aiogram import types
-from aiogram.filters import Command, CommandObject
+from aiogram.filters import Command, CommandObject, MagicData
 
 import config
 from db.User import User
 from db.UserUnion import Group
-from filters.command_args import CommandArgsStartswith
 from keyboards.group import join_group_keyboard
 
 router = Router()
 
 
-@router.message(Command("start"), CommandArgsStartswith('IG'))
+@router.message(Command("start"), MagicData(F.command.args.startswith('IG')))
 async def join_group(message: types.Message, command: CommandObject, user: User):
     group_id, group_password = command.args.replace('IG', '').split('P')[:2]
 
