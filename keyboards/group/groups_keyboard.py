@@ -91,6 +91,11 @@ def get_group(group_id: int, owned: bool, show_leave: bool) -> InlineKeyboardMar
         callback_data=GroupCallback(group=group_id, action='name').pack()
     ))
 
+    kb.add(InlineKeyboardButton(
+        text='Пердежи',
+        callback_data=GroupCallback(group=group_id, action='perdish').pack()
+    ))
+
     kb.row(InlineKeyboardButton(
         text='Удалить группу',
         callback_data=GroupCallback(group=group_id, action='delete').pack()

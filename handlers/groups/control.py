@@ -124,6 +124,15 @@ async def change_group_password(callback: types.CallbackQuery, group: Group, use
     await show_group(callback, group, user, state)
 
 
+@router.callback_query(groups_keyboard.GroupCallback.filter(F.action == 'perdish'))
+async def change_group_password(callback: types.CallbackQuery, group: Group, user: User, state: FSMContext):
+    group.notify_perdish = not group.notify_perdish
+    await group.save()
+
+    await callback.answer(f'Пердежи {["вы", "в"][group.notify_perdish]}ключены.')
+    await show_group(callback, group, user, state)
+
+
 @router.callback_query(groups_keyboard.GroupCallback.filter(F.action == 'name'))
 async def change_group_name(callback: types.CallbackQuery, group: Group, state: FSMContext):
     await callback.message.edit_text(
