@@ -11,6 +11,11 @@ def get(user_id: int) -> InlineKeyboardMarkup:
     ))
 
     kb.row(InlineKeyboardButton(
+        text='Написать через бота',
+        switch_inline_query_current_chat=f'/send {user_id} '
+    ))
+
+    kb.row(InlineKeyboardButton(
         text='Забанить',
         switch_inline_query_current_chat=f'/ban {user_id} '
     ))
