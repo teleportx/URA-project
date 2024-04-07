@@ -84,3 +84,5 @@ async def send(user: User, sret: int):
 
         except Exception as e:
             logger.info(f'Cannnot send notify to {user.uid} cause: {e}')
+
+    return self_message.message_id

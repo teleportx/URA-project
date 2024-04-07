@@ -4,6 +4,7 @@ from aiogram import types, Router, F
 from aiogram.enums import ChatType
 from aiogram.types import InlineQueryResultArticle, InlineQuery, InputTextMessageContent, ChosenInlineResult
 
+import config
 from db.ToiletSessions import SretSession
 from db.User import User
 from keyboards.srat_var_keyboard import SretActions
@@ -78,5 +79,12 @@ async def get_sret_actions(inline_query: InlineQuery, user: User):
 @router.chosen_inline_result()
 async def send_srat_inline(chosen_result: ChosenInlineResult, user: User):
     sret = int(chosen_result.result_id)
-    if await verify_action(user, sret):
-        await send_srat_notification.send(user, sret)
+    if not await verify_action(user, sret):
+        text = 'Эй! Полегче! Вы совершили невозможное для вашей жопы действие! Вы конечно молодец, но мы не отправим уведомление об этом действии всем.'
+        await config.bot.send_message(chosen_result.from_user.id, text)
+        return
+
+    smessage_id = await send_srat_notification.send(user, sret)
+
+    if sret in send_srat_notification.must_not_sret:
+        await SretSession.filter(message_id=smessage_id).update(autoend=False)
