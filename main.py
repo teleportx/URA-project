@@ -24,6 +24,7 @@ async def main():
         parse_mode='markdown',
     )
     config.bot = bot
+    config.bot_me = await bot.me()
     config.loop = asyncio.get_running_loop()
 
     dp = Dispatcher(storage=storage)

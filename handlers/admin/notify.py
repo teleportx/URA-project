@@ -73,7 +73,7 @@ async def submit_notify(callback: types.CallbackQuery, state: FSMContext, user: 
 
 
 @router.message(Command("nstatus"), UserAuthFilter(admin=True))
-async def notify(message: types.Message, command : CommandObject):
+async def nstatus(message: types.Message, command: CommandObject):
     if command.args is None:
         text = '*Очередь уведомлений:*\n'
 

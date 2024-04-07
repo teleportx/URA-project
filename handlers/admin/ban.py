@@ -1,15 +1,16 @@
-from aiogram import Router
+from aiogram import Router, F
 from aiogram import types
 from aiogram.filters import Command, CommandObject
 
 import config
 from db.User import Ban, User
+from filters.command_mention import CommandMention
 from filters.user import UserAuthFilter
 
 router = Router()
 
 
-@router.message(Command("ban"), UserAuthFilter(admin=True))
+@router.message(CommandMention("ban"), UserAuthFilter(admin=True))
 async def ban(message: types.Message, command: CommandObject, user: User):
     if command.args is None:
         await message.reply('Пример:\n`/ban <user_id> <reason>`')
