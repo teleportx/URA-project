@@ -12,7 +12,11 @@ router = Router()
 
 @router.message(Command("start"), MagicData(F.command.args.startswith('IG')))
 async def join_group(message: types.Message, command: CommandObject, user: User):
-    group_id, group_password = command.args.replace('IG', '').split('P')[:2]
+    try:
+        group_id, group_password = command.args.replace('IG', '').split('P')[:2]
+
+    except ValueError:
+        return
 
     if not group_id.isnumeric() or not group_password.isnumeric():
         await message.reply('Группа не найдена.')
