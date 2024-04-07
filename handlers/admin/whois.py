@@ -66,3 +66,8 @@ async def whois_by_message(message: types.Message):
 @router.message(Command("whois"), UserAuthFilter(admin=True), MagicData(F.command.args.isnumeric()))
 async def whois_by_id(message: types.Message, command: CommandObject):
     await whois_ans(message, int(command.args))
+
+
+@router.message(Command("whois"), UserAuthFilter(admin=True), MagicData(~F.command.args.isnumeric()))
+async def whois_by_name(message: types.Message, command: CommandObject):
+    await name_to_id(message, command.args)
