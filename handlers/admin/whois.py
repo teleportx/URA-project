@@ -1,6 +1,6 @@
 from aiogram import Router, F
 from aiogram import types
-from aiogram.filters import Command, MagicData
+from aiogram.filters import Command, MagicData, CommandObject
 
 from db.ToiletSessions import SretSession, SretType
 from db.User import User
@@ -61,3 +61,8 @@ async def whois_by_message(message: types.Message):
 
     name = text[i:j]
     await name_to_id(message, name)
+
+
+@router.message(Command("whois"), UserAuthFilter(admin=True), MagicData(F.command.args.isnumeric()))
+async def whois_by_id(message: types.Message, command: CommandObject):
+    await whois_ans(message, int(command.args))
