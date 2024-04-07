@@ -23,8 +23,8 @@ async def whois_ans(message: types.Message, user_id: int):
         else:
             last_session_timestamp = last_session_timestamp.end
 
-    perdezhs = await SretSession.all().filter(sret_type=SretType.PERNUL).count()
-    toilets = await SretSession.all().filter(sret_type__in=[SretType.SRET, SretType.DRISHET]).count()
+    perdezhs = await SretSession.all().filter(user=user, sret_type=SretType.PERNUL).count()
+    toilets = await SretSession.all().filter(user=user, sret_type__in=[SretType.SRET, SretType.DRISHET]).count()
 
     text = (f'Пользователь *{user.name}* (`{user_id}`)\n\n'
             f'Админ: `{user.admin}`\n'
