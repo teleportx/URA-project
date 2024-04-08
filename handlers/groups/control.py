@@ -108,11 +108,11 @@ async def show_group(callback: types.CallbackQuery, group: Group, user: User, st
 
     if callback is None:
         await config.bot.edit_message_text(text, chat_id, message_id,
-                                           reply_markup=groups_keyboard.get_group(group.pk, has_access))
+                                           reply_markup=groups_keyboard.get_group(group.pk, has_access, owner != user))
         return
 
     await callback.message.edit_text(text,
-                                     reply_markup=groups_keyboard.get_group(group.pk, has_access))
+                                     reply_markup=groups_keyboard.get_group(group.pk, has_access, owner != user))
 
 
 @router.callback_query(groups_keyboard.GroupCallback.filter(F.action == 'password'))
@@ -121,6 +121,15 @@ async def change_group_password(callback: types.CallbackQuery, group: Group, use
     await group.save()
 
     await callback.answer('Пароль группы изменен.')
+    await show_group(callback, group, user, state)
+
+
+@router.callback_query(groups_keyboard.GroupCallback.filter(F.action == 'perdish'))
+async def change_group_password(callback: types.CallbackQuery, group: Group, user: User, state: FSMContext):
+    group.notify_perdish = not group.notify_perdish
+    await group.save()
+
+    await callback.answer(f'Пердежи {["вы", "в"][group.notify_perdish]}ключены.')
     await show_group(callback, group, user, state)
 
 

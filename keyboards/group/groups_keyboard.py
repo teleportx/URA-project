@@ -62,17 +62,18 @@ async def get_all(user: User) -> InlineKeyboardMarkup:
     return kb.as_markup()
 
 
-def get_group(group_id: int, owned: bool) -> InlineKeyboardMarkup:
+def get_group(group_id: int, owned: bool, show_leave: bool) -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
 
     kb.row(_return_button())
 
-    if not owned:
+    if show_leave:
         kb.add(InlineKeyboardButton(
             text='Покинуть',
             callback_data=GroupCallback(group=group_id, action='leave').pack()
         ))
 
+    if not owned:
         return kb.as_markup()
 
     kb.add(InlineKeyboardButton(
@@ -88,6 +89,11 @@ def get_group(group_id: int, owned: bool) -> InlineKeyboardMarkup:
     kb.add(InlineKeyboardButton(
         text='Изменить имя',
         callback_data=GroupCallback(group=group_id, action='name').pack()
+    ))
+
+    kb.add(InlineKeyboardButton(
+        text='Пердежи',
+        callback_data=GroupCallback(group=group_id, action='perdish').pack()
     ))
 
     kb.row(InlineKeyboardButton(
