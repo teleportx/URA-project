@@ -2,15 +2,20 @@ from asyncio import AbstractEventLoop
 from os import environ
 
 from aiogram import Bot
+from aiogram.fsm.storage.redis import RedisStorage
 from aiogram.types import User
 from dotenv import load_dotenv
 
 load_dotenv()
 
 DEBUG = environ.get('DEBUG') == "TRUE"
+
 bot: Bot
 bot_me: User
+storage: RedisStorage
 loop: AbstractEventLoop
+
+ISC = '⠀'  # INVISIBLE SPACE CHAR
 
 
 class Telegram:
