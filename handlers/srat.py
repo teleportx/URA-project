@@ -55,7 +55,7 @@ async def cancel_srat(callback: types.CallbackQuery):
     await callback.message.edit_reply_markup()
 
 
-@router.inline_query()
+@router.inline_query(F.query == '')
 async def get_sret_actions(inline_query: InlineQuery, user: User):
     res = []
     exists = await SretSession.filter(user=user, end=None).exists()
