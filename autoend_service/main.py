@@ -24,11 +24,14 @@ async def end_loop():
                     .filter(sret_type__in=[SretType.SRET, SretType.DRISHET], end=None))
 
         async for session in sessions:
+            user = await session.user
+            await config.bot.edit_message_reply_markup(user.uid, session.message_id, reply_markup=None)
+
             if delete_time >= session.start:
                 await session.delete()
 
                 try:
-                    await config.bot.send_message((await session.user).uid,
+                    await config.bot.send_message(user.uid,
                                                   '*Вы умерли в туалете!*\n'
                                                   'Мы удалили вашу сессию сранья так как вы слишком долго срете, надеемся вы сейчас живы, и просто забыли завершить сранье, впредь будьте внимательнее.')
                 except:
@@ -39,7 +42,7 @@ async def end_loop():
             session.end = datetime.now()
             await session.save()
 
-            await send_srat_notification.send(await session.user, 0)
+            await send_srat_notification.send(user, 0)
 
         await asyncio.sleep(60)
 
