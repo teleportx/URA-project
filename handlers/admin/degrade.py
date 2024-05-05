@@ -3,6 +3,7 @@ import json
 from aiogram import Router
 from aiogram import types
 from aiogram.filters import CommandObject
+from loguru import logger
 
 import config
 from config import ISC
@@ -25,6 +26,8 @@ async def degrade(message: types.Message, command: CommandObject):
     degrade_now = json.loads(await config.storage.redis.get('degrade'))
     if args[0] in DegradationData.model_fields:
         degrade_now[args[0]] = not degrade_now[args[0]]
+
+        logger.warning(f'{message.from_user.id} SET DEGRADATION MODE {args[0]}={degrade_now[args[0]]}')
 
     degrade_model = DegradationData(**degrade_now)
 
