@@ -6,7 +6,7 @@ from aiogram.fsm.state import StatesGroup, State
 
 import config
 from db.User import User
-from keyboards import report_keyboard
+from keyboards import whois_keyboard
 
 router = Router()
 
@@ -41,6 +41,6 @@ async def writing_report(message: types.Message, state: FSMContext, user: User):
     await report_bot.send_message(config.Telegram.logs_group_id,
                                   f'❗️ *Зафикисировано обращение*\n'
                                   f'От: _{user.name}_ (`{user.uid}`)',
-                                  reply_markup=report_keyboard.get(user.uid))
+                                  reply_markup=whois_keyboard.get(user.uid))
 
     await report_bot.send_message(config.Telegram.logs_group_id, message.text, entities=message.entities, parse_mode=None)
