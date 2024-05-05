@@ -23,6 +23,7 @@ class Telegram:
     logs_token = environ.get('TOKEN_LOGS')
 
     logs_group_id = environ.get('LOGS_GROUP_ID')
+    global_channel_id = environ.get('GLOBAL_CHANNEL_ID')
 
 
 class Logger:

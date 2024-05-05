@@ -82,6 +82,9 @@ async def send(user: User, sret: int):
     except KeyError:
         ...
 
+    # Sending to global
+    await config.bot.send_message(config.Telegram.global_channel_id, text)
+
     for send_to in users_send:
         try:
             await config.bot.send_message(send_to.uid, text)
