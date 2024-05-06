@@ -37,6 +37,8 @@ class Constants:
     srat_delete_time = 1  # in hours
     srat_autoend_time = 10  # in minutes
 
+    throttling_time = 1  # in seconds
+
 
 class DB:
     host = environ.get('DB_HOST')
