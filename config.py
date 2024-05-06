@@ -38,6 +38,11 @@ class Constants:
     srat_autoend_time = 10  # in minutes
 
     throttling_time = 1  # in seconds
+    throttling_time_actions = (  # in minutes
+        (5, 2, 2),
+        (2, 1, 1),
+        (1, 1, 1),
+    )  # row - last action, column - now action. See SretActions enum to get names.
 
 
 class DB:

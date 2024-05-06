@@ -1,5 +1,7 @@
+from datetime import datetime, timedelta
 from typing import Optional
 
+import pytz
 from aiogram import types, Router, F
 from aiogram.enums import ChatType
 from aiogram.types import InlineQueryResultArticle, InlineQuery, InputTextMessageContent, ChosenInlineResult
@@ -14,18 +16,34 @@ router = Router()
 
 
 async def verify_action(user: User, sret: int, message: Optional[types.Message] = None):
-    if sret in send_srat_notification.must_sret:
-        if not await SretSession.filter(user=user, end=None).exists():
-            if message is not None:
-                await message.reply('Ты что заканчивать захотел? Ты даже не срешь!')
-            return False
+    last_session = await SretSession.filter(user=user).order_by('-message_id').first()
 
-    if sret in send_srat_notification.must_not_sret:
-        if await SretSession.filter(user=user, end=None).exists():
-            if message is not None:
-                await message.reply('Ты прошлое свое сранье не закончил, а уже новое начинаешь?\n'
-                                    'Нет уж. Будь добр, раз начал - закончи.')
-            return False
+    has_opened_session = False
+    if last_session is not None:
+        has_opened_session = last_session.end is None
+
+    if sret in send_srat_notification.must_sret and not has_opened_session:
+        if message is not None:
+            await message.reply('Ты что заканчивать захотел? Ты даже не срешь!')
+        return False
+
+    if sret in send_srat_notification.must_not_sret and has_opened_session:
+        if message is not None:
+            await message.reply('Ты прошлое свое сранье не закончил, а уже новое начинаешь?\n'
+                                'Нет уж. Будь добр, раз начал - закончи.')
+        return False
+
+    if has_opened_session or last_session is None:
+        return True
+
+    throttling_time = timedelta(minutes=config.Constants.throttling_time_actions[last_session.sret_type - 1][sret - 1])
+    now = datetime.now(pytz.UTC).astimezone()
+    if (now - last_session.end) <= throttling_time:
+        if message is not None:
+            wait_time = round((throttling_time - (now - last_session.end)).total_seconds())
+            await message.reply(f'Вы совершаете действия слишком часто!\n'
+                                f'Подождите еще *{wait_time} секунд*')
+        return False
 
     return True
 
