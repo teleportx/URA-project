@@ -39,7 +39,7 @@ async def end_loop():
 
                 continue
 
-            session.end = datetime.now()
+            session.end = datetime.now(pytz.UTC)
             await session.save()
 
             await send_srat_notification.send(user, 0)

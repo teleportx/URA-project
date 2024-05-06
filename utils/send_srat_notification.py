@@ -1,6 +1,7 @@
 from datetime import datetime
 
 import aiogram.exceptions
+import pytz
 from loguru import logger
 
 import config
@@ -64,7 +65,7 @@ async def send(user: User, sret: int):
                 ...
 
         else:
-            await SretSession.create(message_id=self_message.message_id, user=user, end=datetime.now(),
+            await SretSession.create(message_id=self_message.message_id, user=user, end=datetime.now(pytz.UTC),
                                      sret_type=SretType.PERNUL, autoend=False)
 
     # Send notifications
