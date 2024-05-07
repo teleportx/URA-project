@@ -5,10 +5,12 @@ import pytz
 from aiogram import types, Router, F
 from aiogram.enums import ChatType
 from aiogram.types import InlineQueryResultArticle, InlineQuery, InputTextMessageContent, ChosenInlineResult
+from tortoise import Tortoise
 
 import config
 from db.ToiletSessions import SretSession
 from db.User import User
+from keyboards import sret_keyboard
 from keyboards.srat_var_keyboard import SretActions
 from utils import send_srat_notification
 
@@ -65,12 +67,16 @@ async def send_srat(message: types.Message, user: User):
     await send_srat_notification.send(user, sret)
 
 
-@router.callback_query(F.data == 'cancel_srat')
+@router.callback_query(F.data == 'chg_aend_srat')
 async def cancel_srat(callback: types.CallbackQuery):
-    await SretSession.filter(message_id=callback.message.message_id).update(autoend=False)
+    dbconn = Tortoise.get_connection('default')
+    query = (f'UPDATE sretsession SET autoend = NOT autoend '
+             f'WHERE message_id = {callback.message.message_id} '
+             f'RETURNING autoend;')
+    now_autoend = (await dbconn.execute_query_dict(query))[0].get('autoend')
 
-    await callback.answer('Отменили автозавершение.')
-    await callback.message.edit_reply_markup()
+    await callback.answer(f'{["Выключили", "Включили"][now_autoend]} автозавершение.')
+    await callback.message.edit_reply_markup(reply_markup=sret_keyboard.get(now_autoend))
 
 
 @router.inline_query(F.query == '')

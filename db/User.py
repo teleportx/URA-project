@@ -9,6 +9,9 @@ class User(Model):
     name = fields.CharField(max_length=129)
     admin = PermissionField()
 
+    autoend = fields.BooleanField(default=True)
+    autoend_time = fields.SmallIntField(default=10)
+
     created_at = AutoNowDatetimeField()
 
 

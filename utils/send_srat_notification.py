@@ -41,12 +41,13 @@ async def send(user: User, sret: int):
 
     # Send self
     self_message = await config.bot.send_message(user.uid, text,
-                                                 reply_markup=sret_keyboard.get() if sret in must_not_sret else None)
+                                                 reply_markup=sret_keyboard.get(user.autoend) if sret in must_not_sret else None)
 
     # DB operations
     if sret in must_not_sret:
         await SretSession.create(message_id=self_message.message_id, user=user,
-                                 sret_type=SretType.DRISHET if sret == 2 else SretType.SRET)
+                                 sret_type=SretType.DRISHET if sret == 2 else SretType.SRET,
+                                 autoend=user.autoend)
 
     else:
         session = await SretSession.filter(user=user, end=None).first()
