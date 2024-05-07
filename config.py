@@ -34,8 +34,7 @@ class Constants:
     group_members_limit = 21
     member_group_limit = 5
 
-    srat_delete_time = 1  # in hours
-    srat_autoend_time = 10  # in minutes
+    srat_delete_time = 60  # in minutes
 
     throttling_time = 1  # in seconds
     throttling_time_actions = (  # in minutes
