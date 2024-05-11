@@ -1,7 +1,7 @@
 from aiogram import Router
 
 from . import control
-from . import join_group
+from . import join
 
 router = Router()
 
