@@ -94,7 +94,7 @@ async def show_group(callback: types.CallbackQuery, group: Group, user: User, st
     await state.clear()
     owner = await group.owner
 
-    invite_link = f'https://t.me/{(await config.bot.get_me()).username}?start=IG{group.pk}P{group.password}'
+    invite_link = f'https://t.me/{config.bot_me.username}?start=IG{group.pk}P{group.password}'
     text = (f'Группа *{group.name}* (`{group.pk}`)\n'
             f'Владелец *{owner.name}* (`{owner.uid}`)\n'
             f'Человек *{await group.members.all().count()}/{config.Constants.group_members_limit}*\n'
