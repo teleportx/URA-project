@@ -38,9 +38,9 @@ async def writing_report(message: types.Message, state: FSMContext, user: User):
     await state.clear()
     await message.reply('Ваша обращение зафиксировано!')
 
-    await report_bot.send_message(config.Telegram.logs_group_id,
+    await report_bot.send_message(config.Telegram.admin_group_id,
                                   f'❗️ *Зафикисировано обращение*\n'
                                   f'От: _{user.name}_ (`{user.uid}`)',
                                   reply_markup=whois_keyboard.get(user.uid))
 
-    await report_bot.send_message(config.Telegram.logs_group_id, message.text, entities=message.entities, parse_mode=None)
+    await report_bot.send_message(config.Telegram.admin_group_id, message.text, entities=message.entities, parse_mode=None)
