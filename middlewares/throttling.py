@@ -17,9 +17,10 @@ class ThrottlingMiddleware(UtilMiddleware, ABC):
     ) -> Any:
         user_id = self.get_user(event).id
 
-        last_act = float(await config.storage.redis.get(user_id))
+        last_act = await config.storage.redis.get(user_id)
         if last_act is None:
             last_act = 0
+        last_act = float(last_act)
 
         now = datetime.now().timestamp()
         if (now - last_act) <= config.Constants.throttling_time:
