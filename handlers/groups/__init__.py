@@ -6,4 +6,4 @@ from . import join
 router = Router()
 
 router.include_router(control.router)
-router.include_router(join_group.router)
+router.include_router(join.router)
