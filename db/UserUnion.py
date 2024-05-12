@@ -21,3 +21,9 @@ class Group(Model):
     password = fields.IntField(default=generate_password)
 
     created_at = AutoNowDatetimeField()
+
+
+class FriendRequest(Model):
+    user = fields.ForeignKeyField('models.User', related_name='friends_requested')
+    requested_user = fields.ForeignKeyField('models.User', related_name='friend_requests')
+    message_id = fields.BigIntField(null=True)

@@ -32,6 +32,7 @@ class Logger:
 
 class Constants:
     group_members_limit = 21
+    friends_limit = 53
     member_group_limit = 5
 
     srat_delete_time = 60  # in minutes

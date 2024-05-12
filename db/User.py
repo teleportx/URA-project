@@ -9,6 +9,9 @@ class User(Model):
     name = fields.CharField(max_length=129)
     admin = PermissionField()
 
+    friends = fields.ManyToManyField('models.User', related_name='friend_with', through='friend_user')
+    mute_friend_requests = fields.BooleanField(default=False)
+
     autoend = fields.BooleanField(default=True)
     autoend_time = fields.SmallIntField(default=10)
 
