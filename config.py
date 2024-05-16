@@ -17,6 +17,8 @@ loop: AbstractEventLoop
 
 ISC = '⠀'  # INVISIBLE SPACE CHAR
 
+sentry_dsn = environ.get('SENTRY_DSN')
+
 
 class Telegram:
     token = environ.get('TOKEN')

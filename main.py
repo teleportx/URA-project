@@ -3,7 +3,6 @@ import json
 
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.redis import RedisStorage
-from loguru import logger
 
 import config
 import db
