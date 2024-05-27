@@ -72,11 +72,13 @@ async def send(user: User, sret: int):
     # Send notifications
     users_send = set()
 
-    query = user.groups_member
+    group_query = user.groups_member
     if sret == 3:
-        query = query.filter(notify_perdish=True)
-    async for group in query:
+        group_query = group_query.filter(notify_perdish=True)
+    async for group in group_query:
         users_send = users_send.union(set(await group.members.all()))
+
+    users_send = users_send.union(set(await user.friends.all()))
 
     try:
         users_send.remove(user)
