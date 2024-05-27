@@ -34,6 +34,20 @@ async def send_request(message: types.Message, command: CommandObject, user: Use
         await message.reply('Вы уже друзья.')
         return
 
+    # contr request
+    contr_request = await FriendRequest.filter(user=request_user, requested_user=user).get_or_none()
+    if contr_request is not None:
+        if contr_request.message_id is not None:
+            await config.bot.delete_message(user.uid, contr_request.message_id)
+
+        await contr_request.delete()
+        await user.friends.add(request_user)
+        await request_user.friends.add(user)
+
+        await config.bot.send_message(request_user.uid, f'_{user.name}_ добавил вас в друзья!')
+        await message.answer(f'Вы добавили в друзья _{request_user.name}_.')
+        return
+
     message_id = None
     if not request_user.mute_friend_requests:
         message_id = ((await config.bot.send_message(user_id, f'_{user.name}_ хочет добавить вас в друзья.',
