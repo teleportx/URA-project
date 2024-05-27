@@ -37,7 +37,7 @@ class Constants:
 
     srat_delete_time = 60  # in minutes
 
-    throttling_time = 1  # in seconds
+    throttling_time = 0.5  # in seconds
     throttling_time_actions = (  # in minutes
         (5, 2, 2),
         (2, 1, 1),
