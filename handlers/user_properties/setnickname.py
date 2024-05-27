@@ -3,6 +3,7 @@ from aiogram import types
 from aiogram.filters import Command, CommandObject
 
 from db.User import User
+from utils.verify_name import verify_name
 
 router = Router()
 
@@ -17,7 +18,7 @@ async def setnickname(message: types.Message, command: CommandObject, user: User
         await message.reply('Имя должно быть не длиннее 129 символов.')
         return
 
-    if not command.args.replace(' ', '').isalpha():
+    if not verify_name(command.args.replace(' ', '')):
         await message.reply('Имя не должно содержать специальные символы.')
         return
 

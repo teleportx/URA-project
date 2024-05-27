@@ -10,6 +10,7 @@ from db.User import User
 from db.UserUnion import Group
 from keyboards.group import groups_keyboard
 from middlewares.group import GroupMiddleware
+from utils.verify_name import verify_name
 
 router = Router()
 router.callback_query.middleware.register(GroupMiddleware())
@@ -59,7 +60,7 @@ async def group_writing_name(message: types.Message, state: FSMContext, user: Us
         await config.bot.edit_message_text('Название должно быть не длиннее 32 символов.', user.uid, last_msg)
         return
 
-    if not message.text.replace(' ', '').isalpha():
+    if not verify_name(message.text.replace(' ', '')):
         await config.bot.edit_message_text('Название не должно содержать специальные символы.', user.uid, last_msg)
         return
 
