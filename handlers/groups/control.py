@@ -197,7 +197,7 @@ async def call_submit_delete_group_member(callback: types.CallbackQuery, user: U
     group_data = groups_keyboard.DeleteGroupMemberCallback.unpack(callback.data)
 
     group = await Group.filter(pk=group_data.group).get()
-    if group.owner == group_data.uid:
+    if group.owner_id == group_data.uid:
         await callback.answer('Вы не можете удалить создателя из группы.')
 
     elif user.pk == group_data.uid:
