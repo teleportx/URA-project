@@ -22,7 +22,8 @@ class Telegram:
     token = environ.get('TOKEN')
     logs_token = environ.get('TOKEN_LOGS')
 
-    logs_group_id = environ.get('LOGS_GROUP_ID')
+    admin_group_id = environ.get('ADMIN_GROUP_ID')
+    global_channel_id = environ.get('GLOBAL_CHANNEL_ID')
 
 
 class Logger:
@@ -31,10 +32,17 @@ class Logger:
 
 class Constants:
     group_members_limit = 21
+    friends_limit = 53
     member_group_limit = 5
 
-    srat_delete_time = 1  # in hours
-    srat_autoend_time = 10  # in minutes
+    srat_delete_time = 60  # in minutes
+
+    throttling_time = 0.5  # in seconds
+    throttling_time_actions = (  # in minutes
+        (5, 2, 2),
+        (2, 1, 1),
+        (1, 1, 1),
+    )  # row - last action, column - now action. See SretActions enum to get names.
 
 
 class DB:

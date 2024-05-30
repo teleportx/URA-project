@@ -10,6 +10,7 @@ from db.User import User
 from db.UserUnion import Group
 from keyboards.group import groups_keyboard
 from middlewares.group import GroupMiddleware
+from utils.verify_name import verify_name
 
 router = Router()
 router.callback_query.middleware.register(GroupMiddleware())
@@ -59,7 +60,7 @@ async def group_writing_name(message: types.Message, state: FSMContext, user: Us
         await config.bot.edit_message_text('Название должно быть не длиннее 32 символов.', user.uid, last_msg)
         return
 
-    if not message.text.replace(' ', '').isalpha():
+    if not verify_name(message.text.replace(' ', '')):
         await config.bot.edit_message_text('Название не должно содержать специальные символы.', user.uid, last_msg)
         return
 
@@ -94,7 +95,7 @@ async def show_group(callback: types.CallbackQuery, group: Group, user: User, st
     await state.clear()
     owner = await group.owner
 
-    invite_link = f'https://t.me/{(await config.bot.get_me()).username}?start=IG{group.pk}P{group.password}'
+    invite_link = f'https://t.me/{config.bot_me.username}?start=IG{group.pk}P{group.password}'
     text = (f'Группа *{group.name}* (`{group.pk}`)\n'
             f'Владелец *{owner.name}* (`{owner.uid}`)\n'
             f'Человек *{await group.members.all().count()}/{config.Constants.group_members_limit}*\n'
@@ -197,7 +198,7 @@ async def call_submit_delete_group_member(callback: types.CallbackQuery, user: U
     group_data = groups_keyboard.DeleteGroupMemberCallback.unpack(callback.data)
 
     group = await Group.filter(pk=group_data.group).get()
-    if group.owner == group_data.uid:
+    if group.owner_id == group_data.uid:
         await callback.answer('Вы не можете удалить создателя из группы.')
 
     elif user.pk == group_data.uid:

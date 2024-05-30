@@ -1,9 +1,9 @@
 from aiogram import Router
 
 from . import control
-from . import join
+from . import request
 
 router = Router()
 
 router.include_router(control.router)
-router.include_router(join.router)
+router.include_router(request.router)

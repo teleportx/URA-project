@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 import pytz
 from aiogram import Bot
 from loguru import logger
+from tortoise import Tortoise
 from tortoise.expressions import Q
 
 import config
@@ -14,21 +15,30 @@ from utils import send_srat_notification
 
 setup_logger.__init__('Notify Service')
 
+autoend_sql = f'''
+SELECT sretsession.*  FROM sretsession
+         JOIN public."user" u on u.uid = sretsession.user_id
+         WHERE (start <= (NOW() - interval '{config.Constants.srat_delete_time} minute') OR
+               (start <= (NOW() - interval '1 sec' * u.autoend_time) AND sretsession.autoend = true)) AND
+               sret_type in {SretType.SRET.value, SretType.DRISHET.value} AND "end" IS NULL;
+'''
+
 
 async def end_loop():
     while True:
-        delete_time = datetime.now(pytz.UTC) - timedelta(hours=config.Constants.srat_delete_time)
-        autoend_time = datetime.now(pytz.UTC) - timedelta(minutes=config.Constants.srat_autoend_time)
-        sessions = (SretSession
-                    .filter(Q(Q(start__lte=delete_time), Q(start__lte=autoend_time, autoend=True), join_type='OR'))
-                    .filter(sret_type__in=[SretType.SRET, SretType.DRISHET], end=None))
+        # ORDER THIS 2 LINES IMPORTANT
+        sessions = await SretSession.raw(autoend_sql)
+        delete_time = datetime.now(pytz.UTC) - timedelta(minutes=config.Constants.srat_delete_time)
 
-        async for session in sessions:
+        for session in sessions:
+            user = await session.user
+            await config.bot.edit_message_reply_markup(user.uid, session.message_id, reply_markup=None)
+
             if delete_time >= session.start:
                 await session.delete()
 
                 try:
-                    await config.bot.send_message((await session.user).uid,
+                    await config.bot.send_message(user.uid,
                                                   '*Вы умерли в туалете!*\n'
                                                   'Мы удалили вашу сессию сранья так как вы слишком долго срете, надеемся вы сейчас живы, и просто забыли завершить сранье, впредь будьте внимательнее.')
                 except:
@@ -36,10 +46,10 @@ async def end_loop():
 
                 continue
 
-            session.end = datetime.now()
+            session.end = datetime.now(pytz.UTC)
             await session.save()
 
-            await send_srat_notification.send(await session.user, 0)
+            await send_srat_notification.send(user, 0)
 
         await asyncio.sleep(60)
 

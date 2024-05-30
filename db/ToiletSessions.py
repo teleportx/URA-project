@@ -19,5 +19,5 @@ class SretSession(Model):
     start = AutoNowDatetimeField()
     end = fields.DatetimeField(null=True, default=None)
 
-    autoend = fields.BooleanField(default=True)
+    autoend = fields.BooleanField()
     sret_type = fields.IntEnumField(SretType)
