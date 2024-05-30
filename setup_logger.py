@@ -50,7 +50,7 @@ class TelegramHandler(logging.Handler):
 
         try:
             io_log = BufferedInputFile(record.getMessage().encode(), filename=f'{datetime.now()}.log')
-            await self.bot.send_document(config.Telegram.logs_group_id, io_log, caption=text)
+            await self.bot.send_document(config.Telegram.admin_group_id, io_log, caption=text)
 
         except Exception as e:
             print(':CRITICAL: ERROR WHILE SENDING LOGS TO TG: ')

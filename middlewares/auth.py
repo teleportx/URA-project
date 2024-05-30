@@ -31,7 +31,11 @@ class AuthMiddleware(UtilMiddleware, ABC):
 
         if db_user is None:
             db_user = await User.create(uid=user.id, name=user.full_name)
-            await config.bot.send_message(user.id, first_join_message_text)
+            try:
+                await config.bot.send_message(user.id, first_join_message_text)
+
+            except:
+                ...
 
         data['user'] = db_user
 

@@ -31,7 +31,9 @@ async def whois_ans(message: types.Message, user_id: int):
             f'Аккаунт создан: `{user.created_at}`\n'
             f'Последняя активность: `{last_session_timestamp}`\n'
             f'Всего ходил раз в туалет: `{toilets}`\n'
-            f'Всего пернул: `{perdezhs}`')
+            f'Всего пернул: `{perdezhs}`\n\n'
+            f'Написать через бота: `/send {user_id}`\n'
+            f'Забанить: `/ban {user_id}`')
 
     await message.reply(text, reply_markup=whois_keyboard.get(user_id))
 

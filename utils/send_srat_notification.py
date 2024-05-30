@@ -1,6 +1,7 @@
 from datetime import datetime
 
 import aiogram.exceptions
+import pytz
 from loguru import logger
 
 import config
@@ -40,12 +41,13 @@ async def send(user: User, sret: int):
 
     # Send self
     self_message = await config.bot.send_message(user.uid, text,
-                                                 reply_markup=sret_keyboard.get() if sret in must_not_sret else None)
+                                                 reply_markup=sret_keyboard.get(user.autoend) if sret in must_not_sret else None)
 
     # DB operations
     if sret in must_not_sret:
         await SretSession.create(message_id=self_message.message_id, user=user,
-                                 sret_type=SretType.DRISHET if sret == 2 else SretType.SRET)
+                                 sret_type=SretType.DRISHET if sret == 2 else SretType.SRET,
+                                 autoend=user.autoend)
 
     else:
         session = await SretSession.filter(user=user, end=None).first()
@@ -64,23 +66,28 @@ async def send(user: User, sret: int):
                 ...
 
         else:
-            await SretSession.create(message_id=self_message.message_id, user=user, end=datetime.now(),
+            await SretSession.create(message_id=self_message.message_id, user=user, end=datetime.now(pytz.UTC),
                                      sret_type=SretType.PERNUL, autoend=False)
 
     # Send notifications
     users_send = set()
 
-    query = user.groups_member
+    group_query = user.groups_member
     if sret == 3:
-        query = query.filter(notify_perdish=True)
-    async for group in query:
+        group_query = group_query.filter(notify_perdish=True)
+    async for group in group_query:
         users_send = users_send.union(set(await group.members.all()))
+
+    users_send = users_send.union(set(await user.friends.all()))
 
     try:
         users_send.remove(user)
 
     except KeyError:
         ...
+
+    # Sending to global
+    await config.bot.send_message(config.Telegram.global_channel_id, text)
 
     for send_to in users_send:
         try:
