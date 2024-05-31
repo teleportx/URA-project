@@ -19,7 +19,7 @@ autoend_sql = f'''
 SELECT sretsession.*  FROM sretsession
          JOIN public."user" u on u.uid = sretsession.user_id
          WHERE (start <= (NOW() - interval '{config.Constants.srat_delete_time} minute') OR
-               (start <= (NOW() - interval '1 sec' * u.autoend_time) AND sretsession.autoend = true)) AND
+               (start <= (NOW() - interval '1 min' * u.autoend_time) AND sretsession.autoend = true)) AND
                sret_type in {SretType.SRET.value, SretType.DRISHET.value} AND "end" IS NULL;
 '''
 
