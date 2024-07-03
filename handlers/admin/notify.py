@@ -1,5 +1,6 @@
 import asyncio
 
+import aiogram
 from aiogram import Router, F
 from aiogram import types
 from aiogram.filters import Command, CommandObject
@@ -72,6 +73,33 @@ async def submit_notify(callback: types.CallbackQuery, state: FSMContext, user: 
     await state.clear()
 
 
+async def get_notify_status_text(notify_id: int) -> str:
+    notify_instance = await Notify.filter(pk=notify_id).get_or_none()
+    if notify_instance is None:
+        return ''
+
+    queue_size = await notify_instance.queue.all().count()
+    if queue_size == 0:
+        status = 'ЗАВЕРШЕНО'
+
+    elif queue_size == notify_instance.init_queue_size:
+        status = 'В ОЧЕРЕДИ'
+
+    else:
+        status = 'В ПРОЦЕССЕ'
+
+    percent = round(((notify_instance.init_queue_size - queue_size) / notify_instance.init_queue_size) * 100, 1)
+    text = (f'Уведомление *№{notify_id}*\n'
+            f'Статус: *{status}*\n\n'
+            f'Отправлено: {notify_instance.init_queue_size - queue_size}/{notify_instance.init_queue_size} - {percent}%\n'
+            f'Ошибок: {notify_instance.errors}')
+
+    if queue_size != 0:
+        text += f'\n\n_Время рассылки ~{round(queue_size * 2 / 60, 1)} мин_'
+
+    return text
+
+
 @router.message(Command("nstatus"), UserAuthFilter(admin=True))
 async def nstatus(message: types.Message, command: CommandObject):
     if command.args is None:
@@ -93,28 +121,31 @@ async def nstatus(message: types.Message, command: CommandObject):
         return
     notify_id = int(command.args)
 
-    notify_instance = await Notify.filter(pk=notify_id).get_or_none()
-    if notify_instance is None:
+    text = await get_notify_status_text(notify_id)
+    if text == '':
         await message.reply('Уведомление не найдено.')
         return
 
-    queue_size = await notify_instance.queue.all().count()
-    if queue_size == 0:
-        status = 'ЗАВЕРШЕНО'
+    await message.reply(text, reply_markup=notify_keyboard.get_update())
 
-    elif queue_size == notify_instance.init_queue_size:
-        status = 'В ОЧЕРЕДИ'
 
-    else:
-        status = 'В ПРОЦЕССЕ'
+@router.callback_query(notify_keyboard.Notify.filter(F.action == 'update'))
+async def nstatus_update(callback: types.CallbackQuery):
+    i = callback.message.text.find('№')
+    j = callback.message.text.find('\n')
+    notify_id = callback.message.text[i + 1:j]
 
-    percent = round(((notify_instance.init_queue_size - queue_size) / notify_instance.init_queue_size) * 100, 1)
-    text = (f'Уведомление *№{notify_id}*\n'
-            f'Статус: *{status}*\n\n'
-            f'Отправлено: {notify_instance.init_queue_size - queue_size}/{notify_instance.init_queue_size} - {percent}%\n'
-            f'Ошибок: {notify_instance.errors}')
+    if not notify_id.isnumeric():
+        await callback.message.edit_text('Уведомление не найдено.')
+        return
 
-    if queue_size != 0:
-        text += f'\n\n_Время рассылки ~{round(queue_size * 2 / 60, 1)} мин_'
+    text = await get_notify_status_text(int(notify_id))
+    if text == '':
+        await callback.message.edit_text('Уведомление не найдено.')
+        return
 
-    await message.reply(text)
+    try:
+        await callback.message.edit_text(text, reply_markup=notify_keyboard.get_update())
+
+    except aiogram.exceptions.TelegramBadRequest:
+        await callback.answer('Ничего не изменилось.')
