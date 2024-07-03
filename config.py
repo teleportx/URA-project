@@ -35,7 +35,7 @@ class Constants:
     friends_limit = 53
     member_group_limit = 5
 
-    srat_delete_time = 60  # in minutes
+    srat_delete_time = 60 * 4  # in minutes
 
     throttling_time = 0.5  # in seconds
     throttling_time_actions = (  # in minutes
