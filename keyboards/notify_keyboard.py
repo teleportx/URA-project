@@ -22,3 +22,14 @@ def get(only_cancel: bool = False) -> InlineKeyboardMarkup:
         ))
 
     return kb.as_markup()
+
+
+def get_update() -> InlineKeyboardMarkup:
+    kb = InlineKeyboardBuilder()
+
+    kb.add(InlineKeyboardButton(
+        text=f'Обновить',
+        callback_data=Notify(action='update').pack()
+    ))
+
+    return kb.as_markup()
