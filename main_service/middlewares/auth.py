@@ -5,7 +5,7 @@ from aiogram import types
 
 import config
 from db.User import User, Ban
-from middlewares.util import UtilMiddleware
+from main_service.middlewares.util import UtilMiddleware
 
 
 first_join_message_text = '''Добро пожаловать в УРА!

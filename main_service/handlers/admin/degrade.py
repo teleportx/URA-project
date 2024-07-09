@@ -7,8 +7,8 @@ from loguru import logger
 
 import config
 from config import ISC
-from filters.command_mention import CommandMention
-from filters.user import UserAuthFilter
+from main_service.filters import CommandMention
+from main_service.filters import UserAuthFilter
 from middlewares.degrade import DegradationData
 
 router = Router()

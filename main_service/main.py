@@ -3,7 +3,6 @@ import json
 
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.redis import RedisStorage
-from loguru import logger
 
 import config
 import db
@@ -12,7 +11,7 @@ import middlewares
 import setup_logger
 from middlewares.degrade import DegradationData
 
-setup_logger.__init__('Bot Service')
+setup_logger.__init__('Main Service')
 
 
 async def main():

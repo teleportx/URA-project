@@ -4,7 +4,7 @@ from typing import Any, Dict, Callable
 import tortoise.transactions
 from aiogram.types import Update
 
-from middlewares.util import UtilMiddleware
+from main_service.middlewares.util import UtilMiddleware
 
 
 class DatabaseMiddleware(UtilMiddleware, ABC):

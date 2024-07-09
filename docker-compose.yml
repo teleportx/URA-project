@@ -1,0 +1,16 @@
+services:
+  main-service:
+    build:
+      context: ./
+      dockerfile: ./main_service/Dockerfile
+    restart: unless-stopped
+  notify-service:
+    build:
+       context: ./
+       dockerfile: ./notify_service/Dockerfile
+    restart: unless-stopped
+  autoend-service:
+    build:
+       context: ./
+       dockerfile: ./autoend_service/Dockerfile
+    restart: unless-stopped

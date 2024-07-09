@@ -1,11 +1,11 @@
-from aiogram import Router, F
+from aiogram import Router
 from aiogram import types
 from aiogram.filters import Command, CommandObject
 
 import config
 from db.User import Ban, User
-from filters.command_mention import CommandMention
-from filters.user import UserAuthFilter
+from filters import CommandMention
+from filters import UserAuthFilter
 
 router = Router()
 

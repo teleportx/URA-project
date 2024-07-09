@@ -10,7 +10,7 @@ from tortoise.functions import Count
 
 import config
 from db.User import User, Notify
-from filters.user import UserAuthFilter
+from main_service.filters import UserAuthFilter
 from keyboards import notify_keyboard
 
 router = Router()

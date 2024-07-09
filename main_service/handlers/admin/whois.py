@@ -4,7 +4,7 @@ from aiogram.filters import Command, MagicData, CommandObject
 
 from db.ToiletSessions import SretSession, SretType
 from db.User import User
-from filters.user import UserAuthFilter
+from main_service.filters import UserAuthFilter
 from keyboards import whois_keyboard
 
 router = Router()
