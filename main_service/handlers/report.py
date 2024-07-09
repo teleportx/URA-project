@@ -11,7 +11,7 @@ from keyboards import whois_keyboard
 router = Router()
 
 report_bot = Bot(
-    token=config.Telegram.logs_token,
+    token=config.Telegram.admin_token,
     parse_mode='markdown',
 )
 

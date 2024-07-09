@@ -40,7 +40,7 @@ class TelegramHandler(logging.Handler):
         super().__init__()
 
         self.bot = Bot(
-            token=config.Telegram.logs_token,
+            token=config.Telegram.admin_token,
             parse_mode='markdown',
         )
 

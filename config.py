@@ -20,7 +20,7 @@ ISC = '⠀'  # INVISIBLE SPACE CHAR
 
 class Telegram:
     token = environ.get('TOKEN')
-    logs_token = environ.get('TOKEN_LOGS')
+    admin_token = environ.get('TOKEN_ADMIN')
 
     admin_group_id = environ.get('ADMIN_GROUP_ID')
     global_channel_id = environ.get('GLOBAL_CHANNEL_ID')
