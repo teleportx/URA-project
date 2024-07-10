@@ -4,6 +4,7 @@ import json
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.redis import RedisStorage
 
+import brocker
 import config
 import db
 import handlers
@@ -16,6 +17,8 @@ setup_logger.__init__('Main Service')
 
 async def main():
     await db.init()
+
+    await brocker.init()
 
     redis_url = f'redis://{config.REDIS.user}:{config.REDIS.password}@{config.REDIS.host}:{config.REDIS.port}/{config.REDIS.db_name}'
     storage = RedisStorage.from_url(redis_url)

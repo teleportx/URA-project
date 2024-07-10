@@ -5,6 +5,7 @@ import pytz
 from loguru import logger
 
 import config
+from brocker import message_sender
 from db.ToiletSessions import SretSession, SretType
 from db.User import User
 from keyboards import sret_keyboard
@@ -87,13 +88,9 @@ async def send(user: User, sret: int):
         ...
 
     # Sending to global
-    await config.bot.send_message(config.Telegram.global_channel_id, text)
+    global_message = await config.bot.send_message(config.Telegram.global_channel_id, text)
 
     for send_to in users_send:
-        try:
-            await config.bot.send_message(send_to.uid, text)
-
-        except Exception as e:
-            logger.info(f'Cannnot send notify to {user.uid} cause: {e}')
+        await message_sender.send_message(send_to.uid, global_message.chat.id, global_message.message_id)
 
     return self_message.message_id

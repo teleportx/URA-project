@@ -59,3 +59,13 @@ class REDIS:
     user = environ.get('REDIS_USER')
     password = environ.get('REDIS_PASSWORD')
     db_name = environ.get('REDIS_NAME')
+
+
+class AMQP:
+    host = environ.get('AMQP_HOST')
+    port = int(environ.get('AMQP_PORT'))
+    vhost = environ.get('AMQP_VHOST')
+    user = environ.get('AMQP_USER')
+    password = environ.get('AMQP_PASSWORD')
+
+    uri = f'amqp://{user}:{password}@{host}:{port}/{vhost}'

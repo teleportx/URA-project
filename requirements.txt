@@ -4,3 +4,4 @@ asyncpg==0.29.0
 redis==5.0.2
 tortoise-orm==0.20.0
 loguru==0.7.2
+aiormq==6.8.0

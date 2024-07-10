@@ -7,6 +7,7 @@ from loguru import logger
 from tortoise import Tortoise
 from tortoise.expressions import Q
 
+import brocker
 import config
 import db
 import setup_logger
@@ -55,6 +56,8 @@ async def end_loop():
 
 
 async def main():
+    await brocker.init()
+
     await db.init()
 
     bot = Bot(
