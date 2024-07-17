@@ -70,7 +70,7 @@ async def send_srat(message: types.Message, user: User):
 @router.callback_query(F.data == 'chg_aend_srat')
 async def cancel_srat(callback: types.CallbackQuery):
     dbconn = Tortoise.get_connection('default')
-    query = (f'UPDATE sretsession SET autoend = NOT autoend '
+    query = (f'UPDATE {config.DB.db_name}.public.sretsession SET autoend = NOT autoend '
              f'WHERE message_id = {callback.message.message_id} '
              f'RETURNING autoend;')
     now_autoend = (await dbconn.execute_query_dict(query))[0].get('autoend')
