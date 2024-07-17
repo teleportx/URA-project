@@ -91,6 +91,6 @@ async def send(user: User, sret: int):
     global_message = await config.bot.send_message(config.Telegram.global_channel_id, text)
 
     for send_to in users_send:
-        await message_sender.send_message(send_to.uid, global_message.chat.id, global_message.message_id)
+        await message_sender.send_message(send_to.uid, global_message.chat.id, global_message.message_id, 1)
 
     return self_message.message_id

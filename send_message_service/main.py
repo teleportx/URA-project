@@ -51,7 +51,7 @@ async def main():
     channel = await connection.channel()
     await channel.basic_qos(prefetch_count=1)
 
-    declare = await channel.queue_declare('send_message')
+    declare = await channel.queue_declare('send_message', durable=True, arguments={"x-max-priority": 10})
     await channel.basic_consume(
         declare.queue, on_message
     )

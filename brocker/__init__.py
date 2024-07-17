@@ -9,4 +9,4 @@ async def init():
     base.connection = await aiormq.connect(config.AMQP.uri)
     channel = await base.connection.channel()
 
-    await channel.queue_declare("send_message")
+    await channel.queue_declare("send_message", durable=True, arguments={"x-max-priority": 10})
