@@ -4,11 +4,13 @@ services:
       context: ./
       dockerfile: ./main_service/Dockerfile
     restart: unless-stopped
-  notify-service:
+
+  send-message-service:
     build:
        context: ./
-       dockerfile: ./notify_service/Dockerfile
+       dockerfile: ./send_message_service/Dockerfile
     restart: unless-stopped
+
   autoend-service:
     build:
        context: ./

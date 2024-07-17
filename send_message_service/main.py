@@ -1,5 +1,6 @@
 import asyncio
 import json
+import time
 
 import aiormq
 from aiogram import Bot
@@ -7,11 +8,15 @@ from aiormq.abc import DeliveredMessage
 from loguru import logger
 
 import config
+import db
 import setup_logger
+from db.User import Notify
 
 setup_logger.__init__('Send Message Service')
 
 bot: Bot
+
+update_notify_counter_sql = 'UPDATE notify SET executed_users_count = executed_users_count + 1 WHERE message_id = %d;'
 
 
 async def on_message(message: DeliveredMessage):
@@ -25,11 +30,18 @@ async def on_message(message: DeliveredMessage):
     except Exception as e:
         logger.info(f'Cannnot send notify to {body["send_to"]} cause: {e}')
 
+    if body['notify_id'] is not None:
+        await Notify.raw(update_notify_counter_sql % body['notify_id'])
+
     await message.channel.basic_ack(message.delivery_tag)
+    time.sleep(0.066)  # costyl? | Message sending rate limiter
 
 
 async def main():
     global bot
+
+    await db.init()
+
     bot = Bot(
         token=config.Telegram.token,
         parse_mode='markdown',
@@ -37,6 +49,7 @@ async def main():
 
     connection = await aiormq.connect(config.AMQP.uri)
     channel = await connection.channel()
+    await channel.basic_qos(prefetch_count=1)
 
     declare = await channel.queue_declare('send_message')
     await channel.basic_consume(

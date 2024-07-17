@@ -28,14 +28,9 @@ class Ban(Model):
 
 class Notify(Model):
     message_id = fields.BigIntField(pk=True, unique=True)
-    queue = fields.ManyToManyField('models.User')
 
     initiated_by = fields.ForeignKeyField('models.User', related_name='notifys_inited')
-    init_queue_size = fields.BigIntField()
-    errors = fields.BigIntField(default=0)
-
     created_at = AutoNowDatetimeField()
 
-    @property
-    def completed(self):
-        return len(self.queue) == 0
+    scheduled_users_count = fields.IntField()
+    executed_users_count = fields.IntField(default=0)

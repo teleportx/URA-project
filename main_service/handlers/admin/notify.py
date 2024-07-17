@@ -9,6 +9,7 @@ from aiogram.fsm.state import StatesGroup, State
 from tortoise.functions import Count
 
 import config
+from brocker import message_sender
 from db.User import User, Notify
 from main_service.filters import UserAuthFilter
 from keyboards import notify_keyboard
@@ -62,8 +63,10 @@ async def submit_notify(callback: types.CallbackQuery, state: FSMContext, user: 
     original_message_id = (await state.get_data()).get('message_id')
 
     users = await User.all()
-    notify_instance = await Notify.create(message_id=original_message_id, initiated_by=user, init_queue_size=len(users))
-    await notify_instance.queue.add(*users)
+    notify_instance = await Notify.create(message_id=original_message_id, initiated_by=user, scheduled_users_count=len(users))
+
+    for send_to in users:
+        await message_sender.send_message(send_to.uid, user.uid, original_message_id, 0, notify_instance.pk)
 
     admin_text = (f'Отправка уведомлений начата.\n'
                   f'Айди уведомления `{notify_instance.pk}`\n'
@@ -78,24 +81,22 @@ async def get_notify_status_text(notify_id: int) -> str:
     if notify_instance is None:
         return ''
 
-    queue_size = await notify_instance.queue.all().count()
-    if queue_size == 0:
+    if notify_instance.executed_users_count == notify_instance.scheduled_users_count:
         status = 'ЗАВЕРШЕНО'
 
-    elif queue_size == notify_instance.init_queue_size:
+    elif notify_instance.executed_users_count == 0:
         status = 'В ОЧЕРЕДИ'
 
     else:
         status = 'В ПРОЦЕССЕ'
 
-    percent = round(((notify_instance.init_queue_size - queue_size) / notify_instance.init_queue_size) * 100, 1)
+    percent = round((notify_instance.executed_users_count / notify_instance.scheduled_users_count) * 100, 1)
     text = (f'Уведомление *№{notify_id}*\n'
             f'Статус: *{status}*\n\n'
-            f'Отправлено: {notify_instance.init_queue_size - queue_size}/{notify_instance.init_queue_size} - {percent}%\n'
-            f'Ошибок: {notify_instance.errors}')
+            f'Исполнено: {notify_instance.executed_users_count}/{notify_instance.scheduled_users_count} - {percent}%')
 
-    if queue_size != 0:
-        text += f'\n\n_Время рассылки ~{round(queue_size * 2 / 60, 1)} мин_'
+    if notify_instance.executed_users_count != notify_instance.scheduled_users_count:
+        text += f'\n\n_Время рассылки ~{round((notify_instance.scheduled_users_count - notify_instance.executed_users_count) * 2 / 60, 1)} мин_'
 
     return text
 
@@ -105,11 +106,9 @@ async def nstatus(message: types.Message, command: CommandObject):
     if command.args is None:
         text = '*Очередь уведомлений:*\n'
 
-        notifys = Notify.annotate(queue_count=Count('queue')).filter(queue_count__not=0).order_by('created_at').limit(5)
+        notifys = Notify.all().order_by('created_at').limit(5)
         async for notify_o in notifys:
-            ost_size = notify_o.init_queue_size - await notify_o.queue.all().count()
-
-            now = f'{ost_size}/{notify_o.init_queue_size}' if ost_size != 0 else 'в очереди'
+            now = f'{notify_o.executed_users_count}/{notify_o.init_queue_size}' if notify_o.executed_users_count != 0 else 'в очереди'
             text += f'- №{notify_o.pk}: _{now}_\n'
 
         await message.reply(text)

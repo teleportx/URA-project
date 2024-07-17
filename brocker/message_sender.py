@@ -1,4 +1,5 @@
 import json
+from typing import Optional
 
 import aiormq
 from loguru import logger
@@ -6,13 +7,20 @@ from loguru import logger
 from . import base
 
 
-async def send_message(send_to: int, forward_message_chat: int, forward_message: int, priority: int = 0):
+async def send_message(
+        send_to: int,
+        forward_message_chat: int,
+        forward_message: int,
+        priority: int = 0,
+        notify_id: Optional[int] = None
+):
     channel = await base.connection.channel()
 
     body = json.dumps({
         "send_to": send_to,
         "forward_message_chat": forward_message_chat,
         "forward_message": forward_message,
+        "notify_id": notify_id
 
     }, separators=(',', ':')).encode()
 
