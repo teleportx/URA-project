@@ -14,7 +14,7 @@ def get_main_menu_text(user: User) -> str:
     friend_link = f'https://t.me/{config.bot_me.username}?start=IF{user.uid}'
     text = (f'Список ваших друзей. Для удаления нажмите на никнейм того, кого хотите удалить.\n'
             f'Если вы мутите входящие заявки в друзья, то для добавления в друзья вам нужно будет отправить ответную заявку.\n\n'
-            f'Ваша ссылка для добавления вас в друзья - `{friend_link}`')
+            f'Ваша ссылка для добавления вас в друзья - <code>{friend_link}</code>')
 
     return text
 
@@ -42,7 +42,7 @@ async def delete_friend(callback: types.CallbackQuery):
     cb_data = FriendUserCallback.unpack(callback.data)
     user_2 = await User.filter(pk=cb_data.user_id).only('name').get()
 
-    await callback.message.edit_text(f'Вы уверены, что хотите удалить _{user_2.name}_ из друзей?',
+    await callback.message.edit_text(f'Вы уверены, что хотите удалить <i>{user_2.name}</i> из друзей?',
                                      reply_markup=friends_keyboard.get_submit_delete(cb_data.user_id, 'main', friends_keyboard.FriendUserType.friend_submit))
 
 
@@ -69,7 +69,7 @@ async def delete_friend_request(callback: types.CallbackQuery):
     cb_data = FriendUserCallback.unpack(callback.data)
     user_2 = await User.filter(pk=cb_data.user_id).only('name').get()
 
-    await callback.message.edit_text(f'Вы уверены, что хотите отозвать заявку _{user_2.name}_ в друзья?',
+    await callback.message.edit_text(f'Вы уверены, что хотите отозвать заявку <i>{user_2.name}</i> в друзья?',
                                      reply_markup=friends_keyboard.get_submit_delete(cb_data.user_id, 'req', friends_keyboard.FriendUserType.request_submit))
 
 
@@ -87,7 +87,7 @@ async def delete_friend_request_submit(callback: types.CallbackQuery, user: User
             await config.bot.delete_message(user_2.uid, request.message_id)
 
         except:
-            await config.bot.edit_message_text('_Удаленная заявка_', reply_markup=None)
+            await config.bot.edit_message_text('<i>Удаленная заявка</i>', reply_markup=None)
 
     await callback.answer(f'Отозвали заявку {user_2.name} в друзья.')
     await friend_requests_menu(callback, user)

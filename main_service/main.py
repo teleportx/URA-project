@@ -28,7 +28,7 @@ async def main():
 
     bot = Bot(
         token=config.Telegram.token,
-        parse_mode='markdown',
+        parse_mode='html',
     )
     config.bot = bot
     config.bot_me = await bot.me()

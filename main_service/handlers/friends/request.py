@@ -44,19 +44,19 @@ async def send_request(message: types.Message, command: CommandObject, user: Use
         await user.friends.add(request_user)
         await request_user.friends.add(user)
 
-        await config.bot.send_message(request_user.uid, f'_{user.name}_ добавил вас в друзья!')
-        await message.answer(f'Вы добавили в друзья _{request_user.name}_.')
+        await config.bot.send_message(request_user.uid, f'<i>{user.name}</i> добавил вас в друзья!')
+        await message.answer(f'Вы добавили в друзья <i>{request_user.name}</i>.')
         return
 
     message_id = None
     if not request_user.mute_friend_requests:
-        message_id = ((await config.bot.send_message(user_id, f'_{user.name}_ хочет добавить вас в друзья.',
+        message_id = ((await config.bot.send_message(user_id, f'<i>{user.name}</i> хочет добавить вас в друзья.',
                                                      reply_markup=request_friend_keyboard.get(user.uid, user_id)))
                       .message_id)
 
     await FriendRequest.create(user=user, requested_user=request_user, message_id=message_id)
 
-    await message.reply(f'Успешно отправили запрос на добавление в друзья пользователя _{request_user.name}_')
+    await message.reply(f'Успешно отправили запрос на добавление в друзья пользователя <i>{request_user.name}</i>')
 
 
 @router.callback_query(ActionRequestUserCallback.filter())
@@ -78,10 +78,10 @@ async def action_request(callback: types.CallbackQuery, user: User):
             return
 
     await FriendRequest.filter(user=user_sender, requested_user=user).delete()
-    await callback.message.edit_text(callback.message.text + f'\n\n*{["ОТКЛОНЕНА", "ОДОБРЕНА"][cb_data.result]}*')
+    await callback.message.edit_text(callback.message.text + f'\n\n<b>{["ОТКЛОНЕНА", "ОДОБРЕНА"][cb_data.result]}</b>')
 
     if cb_data.result:
         await user.friends.add(user_sender)
         await user_sender.friends.add(user)
 
-        await config.bot.send_message(user_sender.uid, f'_{user.name}_ добавил вас в друзья!')
+        await config.bot.send_message(user_sender.uid, f'<i>{user.name}</i> добавил вас в друзья!')

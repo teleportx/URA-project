@@ -13,7 +13,7 @@ router = Router()
 async def whois_ans(message: types.Message, user_id: int):
     user = await User.all().filter(uid=user_id).get_or_none()
     if user is None:
-        await message.reply(f'Пользователь с айди `{user_id}` не найден.')
+        await message.reply(f'Пользователь с айди <code>{user_id}</code> не найден.')
         return
 
     last_session_timestamp = await SretSession.all().filter(user=user).order_by('-end').first()
@@ -26,14 +26,14 @@ async def whois_ans(message: types.Message, user_id: int):
     perdezhs = await SretSession.all().filter(user=user, sret_type=SretType.PERNUL).count()
     toilets = await SretSession.all().filter(user=user, sret_type__in=[SretType.SRET, SretType.DRISHET]).count()
 
-    text = (f'Пользователь *{user.name}* (`{user_id}`)\n\n'
-            f'Админ: `{user.admin}`\n'
-            f'Аккаунт создан: `{user.created_at}`\n'
-            f'Последняя активность: `{last_session_timestamp}`\n'
-            f'Всего ходил раз в туалет: `{toilets}`\n'
-            f'Всего пернул: `{perdezhs}`\n\n'
-            f'Написать через бота: `/send {user_id}`\n'
-            f'Забанить: `/ban {user_id}`')
+    text = (f'Пользователь <b>{user.name}</b> (<code>{user_id}</code>)\n\n'
+            f'Админ: <code>{user.admin}</code>\n'
+            f'Аккаунт создан: <code>{user.created_at}</code>\n'
+            f'Последняя активность: <code>{last_session_timestamp}</code>\n'
+            f'Всего ходил раз в туалет: <code>{toilets}</code>\n'
+            f'Всего пернул: <code>{perdezhs}</code>\n\n'
+            f'Написать через бота: <code>/send {user_id}</code>\n'
+            f'Забанить: <code>/ban {user_id}</code>')
 
     await message.reply(text, reply_markup=whois_keyboard.get(user_id))
 
@@ -41,7 +41,7 @@ async def whois_ans(message: types.Message, user_id: int):
 async def name_to_id(message: types.Message, user_name: str):
     user = await User.all().filter(name=user_name).get_or_none()
     if user is None:
-        await message.reply(f'Пользователь с именем `{user_name}` не найден.')
+        await message.reply(f'Пользователь с именем <code>{user_name}</code> не найден.')
         return
 
     await whois_ans(message, user.uid)
@@ -58,8 +58,8 @@ async def whois_by_message(message: types.Message):
         return
 
     text = message.reply_to_message.md_text
-    i = text.find('`') + 1
-    j = text.find('`', i)
+    i = text.find('<code>') + 6
+    j = text.find('</code>')
 
     name = text[i:j]
     await name_to_id(message, name)

@@ -11,7 +11,7 @@ router = Router()
 @router.message(Command("setnickname"))
 async def setnickname(message: types.Message, command: CommandObject, user: User):
     if command.args is None:
-        await message.reply('Пример:\n`/setnickname <name>`')
+        await message.reply('Пример:\n<code>/setnickname &#60;name&#62;</code>')
         return
 
     if len(command.args) > 129:
@@ -25,4 +25,4 @@ async def setnickname(message: types.Message, command: CommandObject, user: User
     user.name = command.args
     await user.save()
 
-    await message.reply(f'Ваш никнейм установлен на *{user.name}*')
+    await message.reply(f'Ваш никнейм установлен на <b>{user.name}</b>')

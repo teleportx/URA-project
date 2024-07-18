@@ -44,7 +44,7 @@ async def verify_action(user: User, sret: int, message: Optional[types.Message] 
         if message is not None:
             wait_time = round((throttling_time - (now - last_session.end)).total_seconds())
             await message.reply(f'Вы совершаете действия слишком часто!\n'
-                                f'Подождите еще *{wait_time} секунд*')
+                                f'Подождите еще <b>{wait_time} секунд</b>')
         return False
 
     return True

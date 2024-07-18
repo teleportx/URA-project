@@ -15,8 +15,6 @@ bot_me: User
 storage: RedisStorage
 loop: AbstractEventLoop
 
-ISC = '⠀'  # INVISIBLE SPACE CHAR
-
 
 class Telegram:
     token = environ.get('TOKEN')

@@ -40,7 +40,7 @@ async def end_loop():
 
                 try:
                     await config.bot.send_message(user.uid,
-                                                  '*Вы умерли в туалете!*\n'
+                                                  '<b>Вы умерли в туалете!</b>\n'
                                                   'Мы удалили вашу сессию сранья так как вы слишком долго срете, надеемся вы сейчас живы, и просто забыли завершить сранье, впредь будьте внимательнее.')
                 except:
                     ...
@@ -62,7 +62,7 @@ async def main():
 
     bot = Bot(
         token=config.Telegram.token,
-        parse_mode='markdown',
+        parse_mode='html',
     )
     config.bot = bot
 

@@ -40,14 +40,14 @@ async def join_group(message: types.Message, command: CommandObject, user: User)
 
     await group.requests.add(user)
     await config.bot.send_message((await group.owner.only('uid').get()).uid,
-                                  f'Пользователь *{user.name}* (`{user.uid}`) хочет вступить к вам в группу *{group.name}* (`{group.pk}`)',
+                                  f'Пользователь <b>{user.name}</b> (<code>{user.uid}</code>) хочет вступить к вам в группу <b>{group.name}</b> (<code>{group.pk}</code>)',
                                   reply_markup=join_group_keyboard.get(user.uid, group.pk))
 
     text = ''
     if (await user.groups_member.all().count() + await user.groups_requested.all().count()) > config.Constants.member_group_limit:
-        text = '\n\n_Учтите, что при принять все поданные вами заявки не получится, так как вы достигните лимит групп._'
+        text = '\n\n<i>Учтите, что при принять все поданные вами заявки не получится, так как вы достигните лимит групп.</i>'
 
-    await message.reply(f'Ваша заявка на присоединение к группе *{group.name}* отправлена и ожидает одобрения.' + text)
+    await message.reply(f'Ваша заявка на присоединение к группе <b>{group.name}</b> отправлена и ожидает одобрения.' + text)
 
 
 @router.callback_query(join_group_keyboard.JoinGroupCallback.filter())
@@ -64,10 +64,10 @@ async def join_group_decline(callback: types.CallbackQuery):
         return
 
     request_status = ["ОТКЛОНЕНА", "ОДОБРЕНА"][join_group_data.result]
-    text = f'Пользователь *{join_user.name}* (`{join_user.uid}`) хочет вступить к вам в группу *{group.name}* (`{group.pk}`)'
+    text = f'Пользователь <b>{join_user.name}</b> (`{join_user.uid}`) хочет вступить к вам в группу <b>{group.name}</b> (<code>{group.pk}</code>)'
 
-    await callback.message.edit_text(text + f'\n\n*{request_status}*')
-    join_user_message = await config.bot.send_message(join_group_data.uid, f'Ваша заявкам в группу *{group.name} {request_status}*')
+    await callback.message.edit_text(text + f'\n\n<b>{request_status}</b>')
+    join_user_message = await config.bot.send_message(join_group_data.uid, f'Ваша заявкам в группу <b>{group.name} {request_status}</b>')
 
     if not join_group_data.result:
         return
@@ -75,7 +75,7 @@ async def join_group_decline(callback: types.CallbackQuery):
     if not join_user.admin and await join_user.groups_member.all().count() >= config.Constants.member_group_limit:
         await callback.answer('Пользователь не добавлен в группу так как количество групп к котором он присоединен достигло максимума.',
                               show_alert=True)
-        await callback.message.edit_text(text + f'\n\n*{request_status} НЕ ДОБАВЛЕН* (лимит групп)')
+        await callback.message.edit_text(text + f'\n\n<b>{request_status} НЕ ДОБАВЛЕН</b> (лимит групп)')
 
         await join_user_message.reply('Вы не были в группу так как количество групп к котором вы присоединенились достигло максимума.')
         return

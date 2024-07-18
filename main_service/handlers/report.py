@@ -12,7 +12,7 @@ router = Router()
 
 report_bot = Bot(
     token=config.Telegram.admin_token,
-    parse_mode='markdown',
+    parse_mode='html',
 )
 
 
@@ -39,7 +39,7 @@ async def writing_report(message: types.Message, state: FSMContext, user: User):
     await message.reply('Ваша обращение зафиксировано!')
 
     await report_bot.send_message(config.Telegram.admin_group_id,
-                                  f'❗️ *Зафикисировано обращение*\n'
+                                  f'❗️<b>Зафикисировано обращение</b>\n'
                                   f'От: _{user.name}_ (`{user.uid}`)',
                                   reply_markup=whois_keyboard.get(user.uid))
 

@@ -17,7 +17,7 @@ async def send(message: types.Message, command: CommandObject):
     args = args.split()
 
     if len(args) < 2:
-        await message.reply('Пример:\n`/send <user_id> <message>`')
+        await message.reply('Пример:\n<code>/send &#60;user_id&#62; &#60;message&#62;</code>')
         return
 
     if not args[0].isnumeric():
@@ -25,7 +25,7 @@ async def send(message: types.Message, command: CommandObject):
         return
 
     try:
-        await config.bot.send_message(args[0], '❗️ *Сообщение от админов:*\n' + ' '.join(args[1:]))
+        await config.bot.send_message(args[0], '❗️ <b>Сообщение от админов:</b>\n' + ' '.join(args[1:]))
         await message.reply('Сообщение отправлено!')
 
     except:

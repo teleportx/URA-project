@@ -69,8 +69,8 @@ async def submit_notify(callback: types.CallbackQuery, state: FSMContext, user: 
         await message_sender.send_message(send_to.uid, user.uid, original_message_id, 0, notify_instance.pk)
 
     admin_text = (f'Отправка уведомлений начата.\n'
-                  f'Айди уведомления `{notify_instance.pk}`\n'
-                  f'Получить актуальную информацию о рассылке:\n`/nstatus {notify_instance.pk}`')
+                  f'Айди уведомления <code>{notify_instance.pk}</code>\n'
+                  f'Получить актуальную информацию о рассылке:\n<code>/nstatus {notify_instance.pk}</code>')
     await callback.message.edit_text(admin_text)
 
     await state.clear()
@@ -91,12 +91,12 @@ async def get_notify_status_text(notify_id: int) -> str:
         status = 'В ПРОЦЕССЕ'
 
     percent = round((notify_instance.executed_users_count / notify_instance.scheduled_users_count) * 100, 1)
-    text = (f'Уведомление *№{notify_id}*\n'
-            f'Статус: *{status}*\n\n'
+    text = (f'Уведомление <b>№{notify_id}</b>\n'
+            f'Статус: <b>{status}</b>\n\n'
             f'Исполнено: {notify_instance.executed_users_count}/{notify_instance.scheduled_users_count} - {percent}%')
 
     if notify_instance.executed_users_count != notify_instance.scheduled_users_count:
-        text += f'\n\n_Время рассылки ~{round((notify_instance.scheduled_users_count - notify_instance.executed_users_count) * 2 / 60, 1)} мин_'
+        text += f'\n\n<i>Время рассылки ~{round((notify_instance.scheduled_users_count - notify_instance.executed_users_count) * 2 / 60, 1)} мин</i>'
 
     return text
 
@@ -104,7 +104,7 @@ async def get_notify_status_text(notify_id: int) -> str:
 @router.message(Command("nstatus"), UserAuthFilter(admin=True))
 async def nstatus(message: types.Message, command: CommandObject):
     if command.args is None:
-        text = '*Очередь уведомлений:*\n'
+        text = '<b>Очередь уведомлений:</b>\n'
 
         notifys = Notify.all().order_by('created_at').limit(5)
         async for notify_o in notifys:

@@ -81,7 +81,7 @@ async def group_writing_name(message: types.Message, state: FSMContext, user: Us
     created_group = await Group.create(name=message.text, owner=user)
     await created_group.members.add(user)
 
-    await config.bot.edit_message_text(f'Ваша группа `{message.text}` успешно создана!\n',
+    await config.bot.edit_message_text(f'Ваша группа <code>{message.text}</code> успешно создана!\n',
                                        user.uid, last_msg,
                                        reply_markup=groups_keyboard.get_return('Перейти к управлению группами'))
 
@@ -96,12 +96,12 @@ async def show_group(callback: types.CallbackQuery, group: Group, user: User, st
     owner = await group.owner
 
     invite_link = f'https://t.me/{config.bot_me.username}?start=IG{group.pk}P{group.password}'
-    text = (f'Группа *{group.name}* (`{group.pk}`)\n'
-            f'Владелец *{owner.name}* (`{owner.uid}`)\n'
-            f'Человек *{await group.members.all().count()}/{config.Constants.group_members_limit}*\n'
-            f'Пердежы: *{["Выключены", "Включены"][group.notify_perdish]}*\n\n'
+    text = (f'Группа <b>{group.name}</b> (<code>{group.pk}</code>)\n'
+            f'Владелец <b>{owner.name}</b> (<code>{owner.uid}</code>)\n'
+            f'Человек <b>{await group.members.all().count()}/{config.Constants.group_members_limit}</b>\n'
+            f'Пердежы: <b>{["Выключены", "Включены"][group.notify_perdish]}</b>\n\n'
             f'_Создана {group.created_at}_\n\n'
-            f'Ссылка-приглашение:\n`{invite_link}`')
+            f'Ссылка-приглашение:\n<code>{invite_link}</code>')
 
     has_access = owner == user or user.admin
     if not has_access:
@@ -146,7 +146,7 @@ async def change_group_name(callback: types.CallbackQuery, group: Group, state: 
 
 @router.callback_query(groups_keyboard.GroupCallback.filter(F.action == 'delete'))
 async def delete_group(callback: types.CallbackQuery, group: Group, state: FSMContext):
-    await callback.message.edit_text(f'Вы уверены что хотите удалить группу *{group.name}* (`{group.pk}`)?\n'
+    await callback.message.edit_text(f'Вы уверены что хотите удалить группу <b>{group.name}</b> (<code>{group.pk}</code>)?\n'
                                      f'Если вы уверены, тогда напишите название группы ответным сообщением.',
                                      reply_markup=groups_keyboard.get_group_return(group.pk, 'Отменить'))
 
@@ -171,7 +171,7 @@ async def delete_group_submit(message: types.Message, state: FSMContext, user: U
         await group.delete()
         await state.clear()
 
-        info_message = await message.answer(f'Группа *{group.name}* удалена.')
+        info_message = await message.answer(f'Группа <b>{group.name}</b> удалена.')
         await config.bot.edit_message_text('Выберите группу.', user.uid, last_msg,
                                            reply_markup=await groups_keyboard.get_all(user))
 
@@ -189,7 +189,7 @@ async def group_members(callback: types.CallbackQuery, group: Group):
 async def call_submit_delete_group_member(callback: types.CallbackQuery):
     group_data = groups_keyboard.DeleteGroupMemberCallback.unpack(callback.data)
 
-    await callback.message.edit_text(f'Вы уверены что хотите удалить пользователя с айди `{group_data.uid}`?',
+    await callback.message.edit_text(f'Вы уверены что хотите удалить пользователя с айди <code>{group_data.uid}</code>?',
                                      reply_markup=groups_keyboard.get_group_delete_member(group_data.uid, group_data.group))
 
 
@@ -206,7 +206,7 @@ async def call_submit_delete_group_member(callback: types.CallbackQuery, user: U
 
     else:
         await group.members.remove(await User.filter(pk=group_data.uid).get())
-        await config.bot.send_message(group_data.uid, f'Вы исключены из групппы *{group.name}* (`{group.pk}`)')
+        await config.bot.send_message(group_data.uid, f'Вы исключены из групппы <b>{group.name}</b> (<code>{group.pk}</code>)')
 
     await group_members(callback, group)
 
@@ -219,5 +219,5 @@ async def leave_from_group(callback: types.CallbackQuery, group: Group, user: Us
 
     owner = await group.owner
 
-    await config.bot.send_message(owner.uid, f'Пользователь *{user.name}* (`{user.uid}`) покинул группу *{group.name}* (`{group.pk}`)')
+    await config.bot.send_message(owner.uid, f'Пользователь <b>{user.name}</b> (<code>{user.uid}</code>) покинул группу <b>{group.name}</b> (<code>{group.pk}</code>)')
 
