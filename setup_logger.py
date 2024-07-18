@@ -5,6 +5,7 @@ import platform
 from datetime import datetime
 from pathlib import Path
 
+import sentry_sdk
 from aiogram import Bot
 from aiogram.types import BufferedInputFile
 from loguru import logger
@@ -105,3 +106,11 @@ def __init__(__project_name: str):
 
     if not config.DEBUG:
         logger.add(TelegramHandler(), level=logging.ERROR)
+
+    if config.Sentry.use_sentry:
+        sentry_sdk.init(
+            dsn=config.Sentry.dsn,
+            traces_sample_rate=1.0,
+            profiles_sample_rate=1.0,
+            environment=project_name_u
+        )

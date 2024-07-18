@@ -69,3 +69,8 @@ class AMQP:
     password = environ.get('AMQP_PASSWORD')
 
     uri = f'amqp://{user}:{password}@{host}:{port}/{vhost}'
+
+
+class Sentry:
+    use_sentry = True
+    dsn = environ.get('SENTRY_DSN')
