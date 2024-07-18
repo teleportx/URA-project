@@ -57,7 +57,7 @@ async def whois_by_message(message: types.Message):
         await message.reply('К сожалению мы не может получить информацию о пользователе из этого сообщения.')
         return
 
-    text = message.reply_to_message.md_text
+    text = message.reply_to_message.html_text
     i = text.find('<code>') + 6
     j = text.find('</code>')
 
