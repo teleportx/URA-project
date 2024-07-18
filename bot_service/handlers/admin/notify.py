@@ -12,7 +12,7 @@ import config
 from brocker import message_sender
 from db.User import User
 from db.Notify import Notify
-from main_service.filters import UserAuthFilter
+from bot_service.filters import UserAuthFilter
 from keyboards import notify_keyboard
 
 router = Router()

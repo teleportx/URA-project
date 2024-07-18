@@ -5,7 +5,7 @@ from aiogram import types
 
 from db.UserUnion import Group
 from keyboards.group import groups_keyboard
-from main_service.middlewares.util import UtilMiddleware
+from bot_service.middlewares.util import UtilMiddleware
 
 
 class GroupMiddleware(UtilMiddleware, ABC):

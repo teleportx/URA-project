@@ -5,7 +5,7 @@ from typing import Any, Dict, Callable
 from aiogram.types import Update
 
 import config
-from main_service.middlewares.util import UtilMiddleware
+from bot_service.middlewares.util import UtilMiddleware
 
 
 class ThrottlingMiddleware(UtilMiddleware, ABC):

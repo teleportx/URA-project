@@ -8,7 +8,7 @@ from loguru import logger
 from pydantic import BaseModel
 
 import config
-from main_service.middlewares.util import UtilMiddleware
+from bot_service.middlewares.util import UtilMiddleware
 
 
 class DegradationData(BaseModel):

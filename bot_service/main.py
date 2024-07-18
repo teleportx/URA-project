@@ -12,7 +12,7 @@ import middlewares
 import setup_logger
 from middlewares.degrade import DegradationData
 
-setup_logger.__init__('Main Service')
+setup_logger.__init__('Bot Service')
 
 
 async def main():

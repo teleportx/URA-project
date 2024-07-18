@@ -7,8 +7,8 @@ from aiogram.utils.formatting import Text, Pre, Code
 from loguru import logger
 
 import config
-from main_service.filters import CommandMention
-from main_service.filters import UserAuthFilter
+from bot_service.filters import CommandMention
+from bot_service.filters import UserAuthFilter
 from middlewares.degrade import DegradationData
 
 router = Router()

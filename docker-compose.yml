@@ -2,7 +2,7 @@ services:
   main-service:
     build:
       context: ./
-      dockerfile: ./main_service/Dockerfile
+      dockerfile: bot_service/Dockerfile
     restart: unless-stopped
 
   send-message-service:

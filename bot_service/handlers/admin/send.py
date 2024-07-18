@@ -3,8 +3,8 @@ from aiogram import types
 from aiogram.filters import CommandObject
 
 import config
-from main_service.filters import CommandMention
-from main_service.filters import UserAuthFilter
+from bot_service.filters import CommandMention
+from bot_service.filters import UserAuthFilter
 
 router = Router()
 
