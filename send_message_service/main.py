@@ -10,7 +10,7 @@ from loguru import logger
 import config
 import db
 import setup_logger
-from db.User import Notify
+from db.Notify import Notify
 
 setup_logger.__init__('Send Message Service')
 

@@ -24,13 +24,3 @@ class Ban(Model):
     reason = fields.TextField()
 
     created_at = AutoNowDatetimeField()
-
-
-class Notify(Model):
-    message_id = fields.BigIntField(pk=True, unique=True)
-
-    initiated_by = fields.ForeignKeyField('models.User', related_name='notifys_inited')
-    created_at = AutoNowDatetimeField()
-
-    scheduled_users_count = fields.IntField()
-    executed_users_count = fields.IntField(default=0)
