@@ -5,3 +5,4 @@ redis==5.0.2
 tortoise-orm==0.20.0
 loguru==0.7.2
 aiormq==6.8.0
+sentry-sdk==2.10.0
