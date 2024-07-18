@@ -9,6 +9,7 @@ from . import srat
 from . import start
 from . import user_properties
 from . import report
+from . import api
 
 router = Router()
 
@@ -21,3 +22,4 @@ router.include_router(groups.router)
 router.include_router(friends.router)
 router.include_router(user_properties.router)
 router.include_router(report.router)
+router.include_router(api.router)

@@ -33,6 +33,8 @@ class Constants:
     friends_limit = 53
     member_group_limit = 5
 
+    max_api_tokens = 50
+
     srat_delete_time = 60 * 4  # in minutes
 
     throttling_time = 0.5  # in seconds
