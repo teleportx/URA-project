@@ -41,6 +41,11 @@ async def writing_report(message: types.Message, state: FSMContext, user: User):
     await report_bot.send_message(config.Telegram.admin_group_id,
                                   f'❗️<b>Зафикисировано обращение</b>\n'
                                   f'От: _{user.name}_ (`{user.uid}`)',
+                                  message_thread_id=config.Telegram.admin_token_report_thread,
                                   reply_markup=whois_keyboard.get(user.uid))
 
-    await report_bot.send_message(config.Telegram.admin_group_id, message.text, entities=message.entities, parse_mode=None)
+    await report_bot.send_message(config.Telegram.admin_group_id,
+                                  message.text,
+                                  message_thread_id=config.Telegram.admin_token_report_thread,
+                                  entities=message.entities,
+                                  parse_mode=None)
