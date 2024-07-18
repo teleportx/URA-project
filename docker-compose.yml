@@ -16,11 +16,3 @@ services:
        context: ./
        dockerfile: ./autoend_service/Dockerfile
     restart: unless-stopped
-    
-  uptime-kuma:
-    image: louislam/uptime-kuma:1
-    restart: unless-stopped
-    ports:
-      - 3001:3001
-    volumes:
-      - ./uptime-kuma/data:/app/data
