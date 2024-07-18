@@ -2,7 +2,7 @@ services:
   main-service:
     build:
       context: ./
-      dockerfile: bot_service/Dockerfile
+      dockerfile: ./main_service/Dockerfile
     restart: unless-stopped
 
   send-message-service:
@@ -16,3 +16,11 @@ services:
        context: ./
        dockerfile: ./autoend_service/Dockerfile
     restart: unless-stopped
+    
+  uptime-kuma:
+    image: louislam/uptime-kuma:1
+    restart: unless-stopped
+    ports:
+      - 3001:3001
+    volumes:
+      - ./uptime-kuma/data:/app/data
