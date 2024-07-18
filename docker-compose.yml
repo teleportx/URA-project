@@ -1,18 +1,57 @@
 services:
-  main-service:
+  postgres:
+    image: postgres:latest
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: urabot
+      POSTGRES_PASSWORD: urabot
+    ports:
+      - "5432:5432"
+    volumes:
+      - ../data/postgres:/var/lib/postgresql/data"
+
+  redis:
+    image: redis:latest
+    restart: unless-stopped
+    command: redis-server /usr/local/etc/redis/redis.conf
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+      - ../data/redis:/data
+
+  rabbitmq:
+    image: rabbitmq:latest
+    hostname: rabbitmq
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: urabot
+      RABBITMQ_DEFAULT_PASS: urabot
+    ports:
+      - "15672:15672"
+    volumes:
+      - ../data/rabbitmq:/var/lib/rabbitmq
+
+  bot-service:
     build:
       context: ./
-      dockerfile: ./main_service/Dockerfile
+      dockerfile: ./bot_service/Dockerfile
     restart: unless-stopped
+    env_file:
+      - integrated.env
 
   send-message-service:
     build:
        context: ./
        dockerfile: ./send_message_service/Dockerfile
     restart: unless-stopped
+    env_file:
+      - integrated.env
 
   autoend-service:
     build:
        context: ./
        dockerfile: ./autoend_service/Dockerfile
     restart: unless-stopped
+    env_file:
+      - integrated.env

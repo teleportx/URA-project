@@ -1,11 +1,12 @@
+import sys
+
+sys.path.append('..')
+
 import asyncio
 from datetime import datetime, timedelta
 
 import pytz
 from aiogram import Bot
-from loguru import logger
-from tortoise import Tortoise
-from tortoise.expressions import Q
 
 import brocker
 import config

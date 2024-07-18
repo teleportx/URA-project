@@ -8,4 +8,5 @@ RUN pip3 install -r requirements.txt
 
 COPY .. .
 
-CMD ["python3.10", "-m", "autoend_service.main"]
+WORKDIR /app/autoend_service
+CMD ["python3.10", "-m", "main"]
