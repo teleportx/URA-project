@@ -73,6 +73,14 @@ class AMQP:
     uri = f'amqp://{user}:{password}@{host}:{port}/{vhost}'
 
 
+class Webhook:
+    host = environ.get('WEBHOOK_HOST')
+    port = int(environ.get('WEBHOOK_PORT'))
+    path = environ.get('WEBHOOK_PATH')
+    secret = environ.get('WEBHOOK_SECRET')
+    remote_host = environ.get('WEBHOOK_REMOTE_HOST')
+
+
 class Sentry:
     use_sentry = True
     dsn = environ.get('SENTRY_DSN')
