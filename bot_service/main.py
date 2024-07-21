@@ -49,7 +49,7 @@ async def main():
     dp.include_router(handlers.router)
 
     if config.DEBUG:
-        await dp.start_polling()
+        await dp.start_polling(bot)
         return
 
     logger.info('Setting webhook...')
