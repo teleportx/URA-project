@@ -15,7 +15,7 @@ import setup_logger
 from db.ToiletSessions import SretSession, SretType
 from utils import send_srat_notification
 
-setup_logger.__init__('Notify Service')
+setup_logger.__init__('Autoend Service')
 
 autoend_sql = f'''
 SELECT sretsession.*  FROM sretsession
