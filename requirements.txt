@@ -6,3 +6,8 @@ tortoise-orm==0.20.0
 loguru==0.7.2
 aiormq==6.8.0
 sentry-sdk==2.10.0
+pytz==2024.1
+aiohttp==3.9.5
+pydantic==2.5.3
+fastapi==0.111.1
+starlette==0.37.2

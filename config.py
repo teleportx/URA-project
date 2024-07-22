@@ -82,5 +82,5 @@ class Webhook:
 
 
 class Sentry:
-    use_sentry = True
+    use_sentry = False
     dsn = environ.get('SENTRY_DSN')

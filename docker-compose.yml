@@ -63,3 +63,11 @@ services:
     restart: unless-stopped
     env_file:
       - integrated.env
+
+  api-srat-service:
+    build:
+      context: ./
+      dockerfile: ./api_services/srat_service/Dockerfile
+    restart: unless-stopped
+    env_file:
+      - integrated.env
