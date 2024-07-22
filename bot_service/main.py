@@ -49,6 +49,7 @@ async def main():
     dp.include_router(handlers.router)
 
     if config.DEBUG:
+        await bot.delete_webhook()
         await dp.start_polling(bot)
         return
 

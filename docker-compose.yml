@@ -64,6 +64,14 @@ services:
     env_file:
       - integrated.env
 
+  frontend-service:
+    build:
+      context: ./frontend_service
+      dockerfile: ./Dockerfile
+    restart: unless-stopped
+    env_file:
+      - integrated.env
+
   api-srat-service:
     build:
       context: ./
