@@ -41,7 +41,7 @@ async def startup_event():
     config.bot = bot
 
 
-@app.get('/api/srat', status_code=200, response_model=SratModel)
+@app.get('/api/srat/', status_code=200, response_model=SratModel)
 async def get_srat(request: Request):
     user: User = request.state.user
 
