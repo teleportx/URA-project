@@ -16,7 +16,7 @@ class SretSession(Model):
     message_id = fields.BigIntField(pk=True, unique=True)
     user = fields.ForeignKeyField('models.User')
 
-    start = AutoNowDatetimeField()
+    start = AutoNowDatetimeField(index=True)
     end = fields.DatetimeField(null=True, default=None)
 
     autoend = fields.BooleanField()
