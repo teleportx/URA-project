@@ -1,0 +1,26 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "SELECT u.name, COUNT(*) count FROM sretsession as s JOIN \"user\" u on u.uid = s.user_id WHERE s.sret_type IN (1, 2) GROUP BY u.name ORDER BY COUNT(*) DESC",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "name",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 1,
+        "name": "count",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": []
+    },
+    "nullable": [
+      false,
+      null
+    ]
+  },
+  "hash": "cfd1b3376cf38d6c95de5b322b06e4ea46761616d08359fd7a0338c6772338d0"
+}

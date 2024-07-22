@@ -19,6 +19,9 @@ struct AnalyticsTemplate {
   type1_total: i64,
   type2_total: i64,
   type3_total: i64,
+  leaderboard1: Vec<LeaderboardRecord>,
+  leaderboard2: Vec<LeaderboardRecord>,
+  leaderboard3: Vec<LeaderboardRecord>,
 }
 
 #[derive(Template)]
@@ -56,11 +59,19 @@ async fn analytics(State(db_pool): State<PgPool>) -> Response {
   (ErrorTemplate {}).into_response()
 }
 
+struct LeaderboardRecord {
+  name: String,
+  count: Option<i64>,
+}
+
 async fn get_analytics(db_pool: PgPool) -> Option<AnalyticsTemplate> {
   let shit = sqlx::query!("SELECT sret_type, COUNT(*) count FROM sretsession GROUP BY sret_type")
     .fetch_all(&db_pool)
     .await
     .ok()?;
+  let leaderboard1: Vec<LeaderboardRecord> = sqlx::query_as!(LeaderboardRecord, "SELECT u.name, COUNT(*) count FROM sretsession as s JOIN \"user\" u ON u.uid = s.user_id GROUP BY u.name ORDER BY COUNT(*) DESC LIMIT 10").fetch_all(&db_pool).await.ok()?;
+  let leaderboard2: Vec<LeaderboardRecord> = sqlx::query_as!(LeaderboardRecord, "SELECT u.name, COUNT(*) count FROM sretsession as s JOIN \"user\" u on u.uid = s.user_id WHERE s.sret_type = 3 GROUP BY u.name ORDER BY COUNT(*) DESC").fetch_all(&db_pool).await.ok()?;
+  let leaderboard3: Vec<LeaderboardRecord> = sqlx::query_as!(LeaderboardRecord, "SELECT u.name, COUNT(*) count FROM sretsession as s JOIN \"user\" u on u.uid = s.user_id WHERE s.sret_type IN (1, 2) GROUP BY u.name ORDER BY COUNT(*) DESC").fetch_all(&db_pool).await.ok()?;
   Some(AnalyticsTemplate {
     type1_total: shit
       .iter()
@@ -77,5 +88,8 @@ async fn get_analytics(db_pool: PgPool) -> Option<AnalyticsTemplate> {
       .find(|x| x.sret_type == 3)
       .and_then(|x| x.count)
       .unwrap_or(0),
+    leaderboard1,
+    leaderboard2,
+    leaderboard3,
   })
 }

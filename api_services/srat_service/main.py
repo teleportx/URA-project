@@ -55,7 +55,7 @@ async def get_srat(request: Request):
     return SratModel(status=srat_status)
 
 
-@app.post('/api/srat', status_code=204)
+@app.post('/api/srat/', status_code=204)
 async def set_srat(request: Request, srat: SratModel):
     if srat.status is None:
         srat.status = 0

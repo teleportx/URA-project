@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <meta charset="utf-8" />
@@ -78,7 +78,7 @@
         </div>
         <p class="text-center text-7xl font-medium">{{ type3_total }}</p>
       </div>
-      <!-- <div
+      <div
         class="space-y-4 rounded-2xl border border-zinc-800/30 bg-zinc-900/50 p-4 text-xl md:col-span-4"
       >
         <div>
@@ -93,18 +93,12 @@
             </tr>
           </thead>
           <tbody>
+            {% for record in leaderboard1 %}
             <tr class="border-b border-b-zinc-900">
-              <td class="p-2 text-left">Malcolm Lockyer</td>
-              <td class="p-2 text-right">1961</td>
+              <td class="p-2 text-left">{{ record.name }}</td>
+              <td class="p-2 text-right">{{ record.count.unwrap_or(0) }}</td>
             </tr>
-            <tr class="border-b border-b-zinc-900">
-              <td class="p-2 text-left">The Eagles</td>
-              <td class="p-2 text-right">1972</td>
-            </tr>
-            <tr class="border-b border-b-zinc-900">
-              <td class="p-2 text-left">Earth, Wind, and Fire</td>
-              <td class="p-2 text-right">1975</td>
-            </tr>
+            {% endfor %}
           </tbody>
         </table>
       </div>
@@ -123,18 +117,12 @@
             </tr>
           </thead>
           <tbody>
+            {% for record in leaderboard2 %}
             <tr class="border-b border-b-zinc-900">
-              <td class="p-2 text-left">Malcolm Lockyer</td>
-              <td class="p-2 text-right">1961</td>
+              <td class="p-2 text-left">{{ record.name }}</td>
+              <td class="p-2 text-right">{{ record.count.unwrap_or(0) }}</td>
             </tr>
-            <tr class="border-b border-b-zinc-900">
-              <td class="p-2 text-left">The Eagles</td>
-              <td class="p-2 text-right">1972</td>
-            </tr>
-            <tr class="border-b border-b-zinc-900">
-              <td class="p-2 text-left">Earth, Wind, and Fire</td>
-              <td class="p-2 text-right">1975</td>
-            </tr>
+            {% endfor %}
           </tbody>
         </table>
       </div>
@@ -153,21 +141,15 @@
             </tr>
           </thead>
           <tbody>
+            {% for record in leaderboard3 %}
             <tr class="border-b border-b-zinc-900">
-              <td class="p-2 text-left">Malcolm Lockyer</td>
-              <td class="p-2 text-right">1961</td>
+              <td class="p-2 text-left">{{ record.name }}</td>
+              <td class="p-2 text-right">{{ record.count.unwrap_or(0) }}</td>
             </tr>
-            <tr class="border-b border-b-zinc-900">
-              <td class="p-2 text-left">The Eagles</td>
-              <td class="p-2 text-right">1972</td>
-            </tr>
-            <tr class="border-b border-b-zinc-900">
-              <td class="p-2 text-left">Earth, Wind, and Fire</td>
-              <td class="p-2 text-right">1975</td>
-            </tr>
+            {% endfor %}
           </tbody>
         </table>
-      </div> -->
+      </div>
     </section>
   </body>
 </html>
