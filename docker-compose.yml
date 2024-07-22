@@ -39,12 +39,15 @@ services:
       - "58772:80"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
+      - ../logs/nginx:/var/log/nginx
 
   bot-service:
     build:
       context: ./
       dockerfile: ./bot_service/Dockerfile
     restart: unless-stopped
+    volumes:
+      - ../logs/services:/app/logs
     env_file:
       - integrated.env
 
@@ -53,6 +56,8 @@ services:
        context: ./
        dockerfile: ./send_message_service/Dockerfile
     restart: unless-stopped
+    volumes:
+      - ../logs/services:/app/logs
     env_file:
       - integrated.env
 
@@ -61,6 +66,8 @@ services:
        context: ./
        dockerfile: ./autoend_service/Dockerfile
     restart: unless-stopped
+    volumes:
+      - ../logs/services:/app/logs
     env_file:
       - integrated.env
 
@@ -69,6 +76,8 @@ services:
       context: ./frontend_service
       dockerfile: ./Dockerfile
     restart: unless-stopped
+    volumes:
+      - ../logs/services:/app/logs
     env_file:
       - integrated.env
 
@@ -77,5 +86,7 @@ services:
       context: ./
       dockerfile: ./api_services/srat_service/Dockerfile
     restart: unless-stopped
+    volumes:
+      - ../logs/services:/app/logs
     env_file:
       - integrated.env
