@@ -3,8 +3,8 @@
 
 ### Команда
 - [Степан Хожемпо](https://github.com/teleportx) - Backend developer & Bot developer
-- [Максим Кузнецов](https://github.com/uuuuuno-devops) - Frontend develover & DevOps engineer
-- [Алексей Шаблыкин](https://t.me/AllShabCH) - Project managener
+- [Максим Кузнецов](https://github.com/uuuuuno-devops) - Frontend developer & DevOps engineer
+- [Алексей Шаблыкин](https://t.me/AllShabCH) - Project manager
 - [Матвей Рябчиков](https://github.com/ronanru) - Frontend develover
 
 ### История
