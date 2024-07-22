@@ -21,9 +21,11 @@ credits_text = Text(
     TextLink('Новостной канал', url='https://t.me/uraproject'), '\n',
     '\n',
     Pre(history, language='История'),
-    'Software Engineer - ', TextLink('Teleport', url='https://github.com/teleportx/'), '\n',
-    'Project Manager - ', TextLink('Алексей Шаблыкин', url='https://t.me/AllShabCH'), '\n',
-    'DevOps Engineer - ', TextLink('uuuuuno', url='https://github.com/uuuuuno/'), '\n',
+    '\n\n',
+    TextLink('Степан Хожемпо', url='https://github.com/teleportx/'), ' - Backend developer & Bot developer', '\n',
+    TextLink('Максим Кузнецов', url='https://github.com/uuuuuno/'), ' - Frontend developer & DevOps engineer', '\n',
+    TextLink('Алексей Шаблыкин', url='https://t.me/AllShabCH'), ' - Project manager', '\n',
+    TextLink('Матвей Рябчиков', url='https://github.com/ronanru/'), ' - Frontend developer', '\n',
     '\n',
     TextLink('Source Code', url='https://github.com/teleportx/URA-project')
 )
