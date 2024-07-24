@@ -11,4 +11,3 @@ aiohttp==3.9.5
 pydantic==2.5.3
 fastapi==0.111.1
 starlette==0.37.2
-aerich==0.7.2
