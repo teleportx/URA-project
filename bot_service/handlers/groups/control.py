@@ -101,7 +101,7 @@ async def show_group(callback: types.CallbackQuery, group: Group, user: User, st
             f'Владелец <b>{owner.name}</b> (<code>{owner.uid}</code>)\n'
             f'Человек <b>{await group.members.all().count()}/{config.Constants.group_members_limit}</b>\n'
             f'Пердежы: <b>{["Выключены", "Включены"][group.notify_perdish]}</b>\n\n'
-            f'_Создана {group.created_at}_\n\n'
+            f'<i>Создана {group.created_at}</i>\n\n'
             f'Ссылка-приглашение:\n<code>{invite_link}</code>')
 
     has_access = owner == user or user.admin
