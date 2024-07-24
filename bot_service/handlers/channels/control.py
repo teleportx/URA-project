@@ -93,6 +93,12 @@ async def show_channel(callback: types.CallbackQuery, user: User, channel: Chann
         await callback.answer('Бот больше не в канале.', show_alert=True)
         return
 
+    # Update channel name if changed
+    if channel.name != channel_bot.full_name:
+        channel.name = channel_bot.full_name
+        await channel.save()
+        await callback.answer('У канала обновлено имя.')
+
     channel_admins = await channel_bot.get_administrators()
     is_owner = False
     for el in channel_admins:
