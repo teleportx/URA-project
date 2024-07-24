@@ -89,6 +89,11 @@ def get_channel(channel_id: int, is_owner: bool) -> InlineKeyboardMarkup:
     ))
 
     kb.row(InlineKeyboardButton(
+        text='Обновить имя',
+        callback_data=ChannelCallback(channel_id=channel_id, action='name').pack()
+    ))
+
+    kb.row(InlineKeyboardButton(
         text='Удалить канал',
         callback_data=ChannelCallback(channel_id=channel_id, action='delete').pack()
     ))

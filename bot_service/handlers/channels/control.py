@@ -7,6 +7,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
 
 import config
+from db import UserUnion
 from db.User import User
 from db.UserUnion import Channel
 from keyboards.channel import channels_keyboard
@@ -110,3 +111,19 @@ async def show_channel(callback: types.CallbackQuery, user: User, channel: Chann
         text = '\n'.join(text.splitlines()[:3])
 
     await callback.message.edit_text(text, reply_markup=channels_keyboard.get_channel(channel.channel_id, is_owner))
+
+
+@router.callback_query(ChannelCallback.filter(F.action == 'password'))
+async def change_channel_password(callback: types.CallbackQuery, user: User, channel: Channel):
+    channel.password = UserUnion.generate_password()
+    await channel.save()
+    await callback.answer('Пароль канала изменен.')
+    await show_channel(callback, user, channel)
+
+
+@router.callback_query(ChannelCallback.filter(F.action == 'perdish'))
+async def change_channel_perdish(callback: types.CallbackQuery, user: User, channel: Channel):
+    channel.notify_perdish = not channel.notify_perdish
+    await channel.save()
+    await callback.answer('Пердежи канала изменены.')
+    await show_channel(callback, user, channel)
