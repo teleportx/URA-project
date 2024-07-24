@@ -19,7 +19,23 @@ class ChannelMiddleware(UtilMiddleware, ABC):
             data: Dict[str, Any]
     ) -> Any:
         try:
-            callback = channels_keyboard.ChannelCallback.unpack(event.data)
+            prefix = event.data[:event.data.find(':')]
+
+            unpack_func = None
+            if prefix == 'chn':
+                unpack_func = channels_keyboard.ChannelCallbackData.unpack
+
+            elif prefix == 'chnp':
+                unpack_func = channels_keyboard.ChannelPagedCallbackData.unpack
+
+            elif prefix == 'chnmd':
+                unpack_func = channels_keyboard.ChannelMemberDeleteCallbackData.unpack
+
+            else:
+                raise TypeError
+
+            callback = unpack_func(event.data)
+
             if callback.channel_id == -1:
                 raise ModuleNotFoundError
 
