@@ -6,6 +6,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
 
 import config
+from db import UserUnion
 from db.User import User
 from db.UserUnion import Group
 from keyboards.group import groups_keyboard
@@ -118,7 +119,7 @@ async def show_group(callback: types.CallbackQuery, group: Group, user: User, st
 
 @router.callback_query(groups_keyboard.GroupCallback.filter(F.action == 'password'))
 async def change_group_password(callback: types.CallbackQuery, group: Group, user: User, state: FSMContext):
-    group.password = Group.generate_password()
+    group.password = UserUnion.generate_password()
     await group.save()
 
     await callback.answer('Пароль группы изменен.')
