@@ -127,7 +127,7 @@ async def change_group_password(callback: types.CallbackQuery, group: Group, use
 
 
 @router.callback_query(groups_keyboard.GroupCallback.filter(F.action == 'perdish'))
-async def change_group_password(callback: types.CallbackQuery, group: Group, user: User, state: FSMContext):
+async def change_group_perdish(callback: types.CallbackQuery, group: Group, user: User, state: FSMContext):
     group.notify_perdish = not group.notify_perdish
     await group.save()
 
