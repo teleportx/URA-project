@@ -18,7 +18,7 @@ async def join_group(message: types.Message, command: CommandObject, user: User)
     except ValueError:
         return
 
-    if not group_id.isnumeric() or not group_password.isnumeric():
+    if not group_id.isnumeric():
         await message.reply('Группа не найдена.')
         return
 
