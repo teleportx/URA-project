@@ -23,7 +23,6 @@ async def join_group(message: types.Message, command: CommandObject, user: User)
         return
 
     group_id = int(group_id)
-    group_password = group_password
 
     group = await Group.filter(pk=group_id, password=group_password).get_or_none()
     if group is None:
