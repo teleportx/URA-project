@@ -53,7 +53,7 @@ async def main():
         await dp.start_polling(bot)
         return
 
-    logger.info('Setting webhook...')
+    logger.info(f'Setting webhook to {config.Webhook.remote_host}{config.Webhook.path}')
     await bot.set_webhook(f"{config.Webhook.remote_host}{config.Webhook.path}", secret_token=config.Webhook.secret)
 
 
