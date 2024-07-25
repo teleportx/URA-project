@@ -5,6 +5,7 @@ services:
     environment:
       POSTGRES_USER: urabot
       POSTGRES_PASSWORD: urabot
+      POSTGRES_DB: urabot
     ports:
       - "5432:5432"
     volumes:
