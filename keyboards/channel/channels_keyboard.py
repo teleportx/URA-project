@@ -127,7 +127,7 @@ async def get_channel_members(channel: Channel, page: int) -> InlineKeyboardMark
 
     navigation, i = paged_keyboard.draw_page_navigation(members, page, channels_on_one_page,
                                                         page_callback_data_class=ChannelPagedCallbackData,
-                                                        unit='menu', channel_id=channel.channel_id)
+                                                        unit='members', channel_id=channel.channel_id)
     kb.add(*navigation)
 
     for el in members:

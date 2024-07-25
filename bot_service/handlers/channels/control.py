@@ -2,7 +2,7 @@ from typing import Tuple, List
 
 import aiogram
 import tortoise
-from aiogram import Router, F
+from aiogram import Router, F, Bot
 from aiogram import types
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
@@ -31,17 +31,21 @@ channel_members_menu_text = 'Нажмите на пользователя, ко�
 router.callback_query.middleware.register(ChannelMiddleware(channel_menu_text))
 
 
-async def get_bot_channel(callback: types.CallbackQuery, channel_id: int, user: User) -> Tuple[types.Chat, List[types.ChatMember]]:
+async def get_bot_channel(bot: Bot, channel_id: int) -> Tuple[types.Chat, List[types.ChatMember]]:
     try:
-        channel_bot = await callback.bot.get_chat(channel_id)
+        channel_bot = await bot.get_chat(channel_id)
         return channel_bot, await channel_bot.get_administrators()
 
     except (aiogram.exceptions.TelegramForbiddenError, aiogram.exceptions.TelegramBadRequest):
-        await callback.message.edit_text(channel_menu_text, reply_markup=await channels_keyboard.get_menu(user, 0))
-        await callback.answer('Бот больше не в канале.', show_alert=True)
+
         await Channel.filter(pk=channel_id).delete()
 
         return None, None
+
+
+async def answer_channel_deleted(callback: types.CallbackQuery, user: User):
+    await callback.message.edit_text(channel_menu_text, reply_markup=await channels_keyboard.get_menu(user, 0))
+    await callback.answer('Бот больше не в канале.', show_alert=True)
 
 
 async def is_admin_channel(channel_bot: types.Chat, user_id: int, channel_admins: List[types.ChatMember] = None) -> bool:
@@ -116,8 +120,9 @@ async def create_channel_message_from(message: types.Message, user: User, state:
 # CONTROL CHANNEL
 @router.callback_query(ChannelCallbackData.filter(F.action == 'channel'))
 async def show_channel(callback: types.CallbackQuery, user: User, channel: Channel):
-    channel_bot, channel_admins = await get_bot_channel(callback, channel.channel_id, user)
+    channel_bot, channel_admins = await get_bot_channel(callback.bot, channel.channel_id)
     if channel_bot is None:
+        await answer_channel_deleted(callback, user)
         return
 
     # Update channel name if changed
@@ -174,8 +179,9 @@ async def delete_channel_member(callback: types.CallbackQuery):
 
 @router.callback_query(ChannelMemberDeleteCallbackData.filter(F.submit))
 async def delete_channel_member_submit(callback: types.CallbackQuery, user: User, channel: Channel):
-    channel_bot, channel_admins = await get_bot_channel(callback, channel.channel_id, user)
+    channel_bot, channel_admins = await get_bot_channel(callback.bot, channel.channel_id)
     if channel_bot is None:
+        await answer_channel_deleted(callback, user)
         return
 
     cb_data = ChannelMemberDeleteCallbackData.unpack(callback.data)
