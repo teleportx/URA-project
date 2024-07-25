@@ -1,13 +1,12 @@
-from random import randint
-
 from tortoise import fields
 from tortoise.models import Model
 
 from db.fields import AutoNowDatetimeField
+from utils.generate_random_secret import generate_random_secret
 
 
-def generate_password() -> int:
-    return randint(100000, 999999)
+def generate_password() -> str:
+    return generate_random_secret(8).lower()
 
 
 class Group(Model):
@@ -18,7 +17,7 @@ class Group(Model):
     requests = fields.ManyToManyField('models.User', related_name='groups_requested', through='group_request')
 
     notify_perdish = fields.BooleanField(default=True)
-    password = fields.IntField(default=generate_password)
+    password = fields.CharField(default=generate_password, max_length=8)
 
     created_at = AutoNowDatetimeField()
 
@@ -37,6 +36,6 @@ class Channel(Model):
     requests = fields.ManyToManyField('models.User', related_name='channels_requested', through='channel_request')
 
     notify_perdish = fields.BooleanField(default=True)
-    password = fields.IntField(default=generate_password)
+    password = fields.CharField(default=generate_password, max_length=8)
 
     created_at = AutoNowDatetimeField()

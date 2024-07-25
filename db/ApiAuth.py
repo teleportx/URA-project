@@ -9,8 +9,7 @@ from tortoise.models import Model
 from tortoise.validators import MinLengthValidator, Validator
 
 from db.fields import AutoNowDatetimeField
-
-letters = string.ascii_letters + string.digits
+from utils.generate_random_secret import generate_random_secret
 
 
 class TokenNameValidator(Validator):
@@ -36,6 +35,5 @@ class ApiToken(Model):
 
     @classmethod
     def generate_token(cls) -> Tuple[str, str]:
-        token = ''.join(secrets.choice(letters) for _ in range(64))
-
+        token = generate_random_secret(64)
         return token, cls.hash_token(token)
