@@ -66,7 +66,7 @@ def get_channel(channel_id: int, is_owner: bool) -> InlineKeyboardMarkup:
     if not is_owner:
         kb.add(InlineKeyboardButton(
             text='Покинуть',
-            callback_data=ChannelPagedCallbackData(unit='menu', page=0).pack()
+            callback_data=ChannelCallbackData(channel_id=channel_id, action='leave').pack()
         ))
 
         return kb.as_markup()

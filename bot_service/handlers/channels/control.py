@@ -145,6 +145,20 @@ async def show_channel(callback: types.CallbackQuery, user: User, channel: Chann
     await callback.message.edit_text(text, reply_markup=channels_keyboard.get_channel(channel.channel_id, is_admin))
 
 
+@router.callback_query(ChannelCallbackData.filter(F.action == 'leave'))
+async def leave_from_channel(callback: types.CallbackQuery, user: User, channel: Channel):
+    channel_bot, channel_admins = await get_bot_channel(callback.bot, channel.channel_id)
+    if channel_bot is None:
+        await answer_channel_deleted(callback, user)
+        return
+    is_admin = await is_admin_channel(channel_bot, user.uid, channel_admins)
+    if is_admin:
+        await callback.answer('Вы не можете ливнуть из этого канала, тк вы админ.', show_alert=True)
+
+    await channel.members.remove(user)
+    await callback.message.edit_text(channel_menu_text, reply_markup=await channels_keyboard.get_menu(user, 0))
+
+
 @router.callback_query(ChannelCallbackData.filter(F.action == 'password'))
 async def change_channel_password(callback: types.CallbackQuery, user: User, channel: Channel):
     channel.password = UserUnion.generate_password()
