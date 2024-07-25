@@ -126,4 +126,7 @@ async def send(user: User, sret: int):
     for send_to in users_send:
         await message_sender.send_message(send_to.uid, user.uid, self_message.message_id, 1)
 
+    async for send_to_channel in user.channels_member.all():
+        await message_sender.send_message(send_to_channel.channel_id, user.uid, self_message.message_id, 1, show_sender=True)
+
     return self_message.message_id

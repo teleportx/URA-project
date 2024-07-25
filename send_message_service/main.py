@@ -27,7 +27,11 @@ async def on_message(message: DeliveredMessage):
     body = json.loads(message.body.decode())
 
     try:
-        await bot.copy_message(body['send_to'], body['forward_message_chat'], body['forward_message'])
+        func = bot.copy_message
+        if body.get('show_sender', False):
+            func = bot.forward_message
+
+        await func(body['send_to'], body['forward_message_chat'], body['forward_message'])
 
         logger.debug(f'Sended message to {body["send_to"]} from chat {body["forward_message_chat"]} message {body["forward_message"]}.')
 
