@@ -1,3 +1,4 @@
+import aiogram
 from aiogram import BaseMiddleware
 from aiogram.types import Update
 
@@ -15,3 +16,6 @@ class UtilMiddleware(BaseMiddleware):
 
         elif event.chosen_inline_result:
             return event.chosen_inline_result.from_user
+
+        elif event.chat_member:
+            return event.chat_member.from_user

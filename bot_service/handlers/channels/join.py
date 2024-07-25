@@ -2,7 +2,7 @@ from aiogram import Router, F
 from aiogram import types
 from aiogram.enums import ChatMemberStatus
 from aiogram.filters import Command, CommandObject, MagicData
-
+from aiogram.filters.chat_member_updated import ChatMemberUpdatedFilter, KICKED, LEFT, MEMBER, CREATOR, ADMINISTRATOR
 from db.User import User
 from db.UserUnion import Channel
 from handlers.channels.control import get_bot_channel
@@ -46,3 +46,13 @@ async def join_channel(message: types.Message, command: CommandObject, user: Use
 
     await channel.members.add(user)
     await message.reply(f'Добро пожаловать в канал <b>{channel.name}</b>!')
+
+
+@router.chat_member(ChatMemberUpdatedFilter(member_status_changed=(KICKED | LEFT) << (MEMBER | CREATOR | ADMINISTRATOR)))
+async def kick_from_channel(update: types.ChatMemberUpdated, user: User):
+    channel = await Channel.get_or_none(pk=update.chat.id)
+    if channel is None:
+        return
+
+    await update.bot.send_message(user.uid, f'Вы исключены из канала <b>{channel.name}</b>')
+    await channel.members.remove(user)
