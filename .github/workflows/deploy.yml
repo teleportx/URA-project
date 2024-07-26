@@ -17,6 +17,7 @@ jobs:
       uses: Alemiz112/netbird-connect@v1
       with:
         setup-key: ${{ secrets.NETBIRD_SETUP_KEY }}
+        hostname: 'deploy-ura'
         management-url: 'https://api.netbird.io'
 
     - name: Deploy
