@@ -84,6 +84,20 @@ services:
     env_file:
       - integrated.env
 
+  export-info-service:
+    build:
+       context: ./
+       dockerfile: ./export_info_service/Dockerfile
+    restart: unless-stopped
+    volumes:
+      - ../logs/services:/app/logs
+    depends_on:
+      - postgres
+      - redis
+      - rabbitmq
+    env_file:
+      - integrated.env
+
   frontend-service:
     build:
       context: ./frontend_service
