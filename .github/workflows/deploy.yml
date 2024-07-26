@@ -2,7 +2,7 @@ name: Deploy to server
 
 on:
   push:
-    branches: [ main ]
+    branches: [ dev ]
 
 jobs:
   build:
@@ -12,6 +12,12 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v2
 
+    - name: Netbird Install
+      run: |
+        curl -fsSL https://pkgs.netbird.io/install.sh | sh
+    - name: Netbird Connect
+      run: |
+        sudo netbird up --setup-key=${{ secrets.NETBIRD_SETUP_KEY }} --management-url=https://api.netbird.io:443
     - name: Deploy
       uses: appleboy/ssh-action@master
       with:
@@ -19,4 +25,8 @@ jobs:
         username: ${{ secrets.SSH_USER }}
         password: ${{ secrets.SSH_PASSWORD }}
         script: |
-          sh urabot_deploy.sh
+          cd URA-project
+          git fetch
+          git pull
+          docker compose down
+          docker compose up -d --build
