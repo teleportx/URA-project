@@ -49,6 +49,10 @@ services:
     restart: unless-stopped
     volumes:
       - ../logs/services:/app/logs
+    depends_on:
+      - postgres
+      - redis
+      - rabbitmq
     env_file:
       - integrated.env
 
@@ -59,6 +63,10 @@ services:
     restart: unless-stopped
     volumes:
       - ../logs/services:/app/logs
+    depends_on:
+      - postgres
+      - redis
+      - rabbitmq
     env_file:
       - integrated.env
 
@@ -69,6 +77,10 @@ services:
     restart: unless-stopped
     volumes:
       - ../logs/services:/app/logs
+    depends_on:
+      - postgres
+      - redis
+      - rabbitmq
     env_file:
       - integrated.env
 
@@ -79,6 +91,10 @@ services:
     restart: unless-stopped
     volumes:
       - ../logs/services:/app/logs
+    depends_on:
+      - postgres
+      - redis
+      - rabbitmq
     env_file:
       - integrated.env
 
@@ -89,5 +105,9 @@ services:
     restart: unless-stopped
     volumes:
       - ../logs/services:/app/logs
+    depends_on:
+      - postgres
+      - redis
+      - rabbitmq
     env_file:
       - integrated.env
