@@ -163,4 +163,5 @@ data.json
 .setupdb.py
 test.py
 
-logs
+logs/
+.pio/

@@ -11,5 +11,6 @@ class PermissionField(fields.BooleanField):
 
 
 class AutoNowDatetimeField(fields.DatetimeField):
-    def __init__(self):
-        super().__init__(default=datetime.now)
+    def __init__(self, *args, **kwargs):
+        kwargs.update(default=datetime.now)
+        super().__init__(*args, **kwargs)

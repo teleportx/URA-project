@@ -1,0 +1,12 @@
+set dotenv-load
+
+dev:
+  watchexec -e rs,html -r just dev-no-watch
+
+dev-no-watch:
+  tailwindcss -c tailwind.config.js -i ./tailwind.css -o ./public/styles.css
+  cargo run
+  
+build:
+  tailwindcss -c tailwind.config.js -i ./tailwind.css -o ./public/styles.css --minify
+  cargo build --release

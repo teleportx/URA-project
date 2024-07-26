@@ -1,19 +1,21 @@
+import sys
+
+sys.path.append('..')
+
 import asyncio
 from datetime import datetime, timedelta
 
 import pytz
 from aiogram import Bot
-from loguru import logger
-from tortoise import Tortoise
-from tortoise.expressions import Q
 
+import brocker
 import config
 import db
 import setup_logger
 from db.ToiletSessions import SretSession, SretType
 from utils import send_srat_notification
 
-setup_logger.__init__('Notify Service')
+setup_logger.__init__('Autoend Service')
 
 autoend_sql = f'''
 SELECT sretsession.*  FROM sretsession
@@ -39,7 +41,7 @@ async def end_loop():
 
                 try:
                     await config.bot.send_message(user.uid,
-                                                  '*Вы умерли в туалете!*\n'
+                                                  '<b>Вы умерли в туалете!</b>\n'
                                                   'Мы удалили вашу сессию сранья так как вы слишком долго срете, надеемся вы сейчас живы, и просто забыли завершить сранье, впредь будьте внимательнее.')
                 except:
                     ...
@@ -55,11 +57,13 @@ async def end_loop():
 
 
 async def main():
+    await brocker.init()
+
     await db.init()
 
     bot = Bot(
         token=config.Telegram.token,
-        parse_mode='markdown',
+        parse_mode='html',
     )
     config.bot = bot
 

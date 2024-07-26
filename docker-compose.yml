@@ -1,0 +1,127 @@
+services:
+  postgres:
+    image: postgres:latest
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: urabot
+      POSTGRES_PASSWORD: urabot
+      POSTGRES_DB: urabot
+    ports:
+      - "5432:5432"
+    volumes:
+      - ../data/postgres:/var/lib/postgresql/data
+
+  redis:
+    image: redis:latest
+    restart: unless-stopped
+    command: redis-server /usr/local/etc/redis/redis.conf
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+      - ../data/redis:/data
+
+  rabbitmq:
+    image: rabbitmq:latest
+    hostname: rabbitmq
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: urabot
+      RABBITMQ_DEFAULT_PASS: urabot
+    ports:
+      - "15672:15672"
+    volumes:
+      - ../data/rabbitmq:/var/lib/rabbitmq
+
+  nginx:
+    image: nginx:latest
+    restart: unless-stopped
+    ports:
+      - "58772:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ../logs/nginx:/var/log/nginx
+
+  bot-service:
+    build:
+      context: ./
+      dockerfile: ./bot_service/Dockerfile
+    restart: unless-stopped
+    volumes:
+      - ../logs/services:/app/logs
+    depends_on:
+      - postgres
+      - redis
+      - rabbitmq
+    env_file:
+      - integrated.env
+
+  send-message-service:
+    build:
+       context: ./
+       dockerfile: ./send_message_service/Dockerfile
+    restart: unless-stopped
+    volumes:
+      - ../logs/services:/app/logs
+    depends_on:
+      - postgres
+      - redis
+      - rabbitmq
+    env_file:
+      - integrated.env
+
+  autoend-service:
+    build:
+       context: ./
+       dockerfile: ./autoend_service/Dockerfile
+    restart: unless-stopped
+    volumes:
+      - ../logs/services:/app/logs
+    depends_on:
+      - postgres
+      - redis
+      - rabbitmq
+    env_file:
+      - integrated.env
+
+  export-info-service:
+    build:
+       context: ./
+       dockerfile: ./export_info_service/Dockerfile
+    restart: unless-stopped
+    volumes:
+      - ../logs/services:/app/logs
+    depends_on:
+      - postgres
+      - redis
+      - rabbitmq
+    env_file:
+      - integrated.env
+
+  frontend-service:
+    build:
+      context: ./frontend_service
+      dockerfile: ./Dockerfile
+    restart: unless-stopped
+    volumes:
+      - ../logs/services:/app/logs
+    depends_on:
+      - postgres
+      - redis
+      - rabbitmq
+    env_file:
+      - integrated.env
+
+  api-srat-service:
+    build:
+      context: ./
+      dockerfile: ./api_services/srat_service/Dockerfile
+    restart: unless-stopped
+    volumes:
+      - ../logs/services:/app/logs
+    depends_on:
+      - postgres
+      - redis
+      - rabbitmq
+    env_file:
+      - integrated.env

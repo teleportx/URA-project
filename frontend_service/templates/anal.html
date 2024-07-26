@@ -1,0 +1,155 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>YPA Project</title>
+    <meta
+      name="description"
+      content="Уведомление Ректальных Активностей Бот, чтобы
+          держать всех в курсе о ваших ректальных деяниях."
+    />
+    <link rel="stylesheet" href="/public/styles.css" />
+  </head>
+  <body class="bg-black text-white">
+    <header
+      class="absolute inset-x-0 top-0 flex justify-center gap-12 px-12 py-6 sm:justify-start z-20"
+    >
+      <a
+        class="text-xl text-zinc-200 transition-all duration-300 hover:text-white hover:underline"
+        href="https://t.me/uragv_bot"
+        >Бот</a
+      >
+      <a
+        class="text-xl text-zinc-200 transition-all duration-300 hover:text-white hover:underline"
+        href="https://t.me/uraproject"
+        >Новости</a
+      >
+      <!-- <a class="text-xl text-zinc-200 transition-all duration-300 hover:text-white hover:underline" href=".">API</a> -->
+      <a
+        class="text-xl text-zinc-200 transition-all duration-300 hover:text-white hover:underline"
+        href="/anal"
+        >Аналитика</a
+      >
+    </header>
+    <section
+      class="grid gap-4 px-12 py-24 grid-cols-1 md:grid-cols-6 lg:grid-cols-12"
+    >
+      <div
+        class="absolute top-32 left-64 -z-10 size-[280px] animate-blob rounded-full bg-blue-500 mix-blend-normal blur-[150px] delay-500"
+      ></div>
+      <div
+        class="absolute bottom-48 right-12 -z-10 size-[280px] animate-blob rounded-full bg-[#8B5CF6] mix-blend-normal blur-[150px] duration-1000"
+      ></div>
+      <div
+        class="space-y-4 rounded-2xl border border-zinc-800/30 bg-zinc-900/50 p-4 text-xl md:col-span-3"
+      >
+        <div>
+          <p class="text-2xl font-medium">Всего уведомлений</p>
+          <p class="text-sm font-medium text-zinc-600">За все время</p>
+        </div>
+        <p class="text-center text-7xl font-medium">
+          {{ type1_total + type2_total + type3_total }}
+        </p>
+      </div>
+      <div
+        class="space-y-4 rounded-2xl border border-zinc-800/30 bg-zinc-900/50 p-4 text-xl md:col-span-3"
+      >
+        <div>
+          <p class="text-2xl font-medium">Всего насрано</p>
+          <p class="text-sm font-medium text-zinc-600">За все время</p>
+        </div>
+        <p class="text-center text-7xl font-medium">{{ type1_total }}</p>
+      </div>
+      <div
+        class="space-y-4 rounded-2xl border border-zinc-800/30 bg-zinc-900/50 p-4 text-xl md:col-span-3"
+      >
+        <div>
+          <p class="text-2xl font-medium">Всего надристано</p>
+          <p class="text-sm font-medium text-zinc-600">За все время</p>
+        </div>
+        <p class="text-center text-7xl font-medium">{{ type2_total }}</p>
+      </div>
+      <div
+        class="space-y-4 rounded-2xl border border-zinc-800/30 bg-zinc-900/50 p-4 text-xl md:col-span-3"
+      >
+        <div>
+          <p class="text-2xl font-medium">Всего напержено</p>
+          <p class="text-sm font-medium text-zinc-600">За все время</p>
+        </div>
+        <p class="text-center text-7xl font-medium">{{ type3_total }}</p>
+      </div>
+      <div
+        class="space-y-4 rounded-2xl border border-zinc-800/30 bg-zinc-900/50 p-4 text-xl md:col-span-4"
+      >
+        <div>
+          <p class="text-2xl font-medium">Лучшие по активности</p>
+          <p class="text-sm font-medium text-zinc-600">За все время</p>
+        </div>
+        <table class="table-auto w-full text-medium text-lg">
+          <thead>
+            <tr class="border-b border-b-zinc-900">
+              <th class="p-2 text-zinc-600 text-left">Имя</th>
+              <th class="p-2 text-zinc-600 text-right">число</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for record in leaderboard1 %}
+            <tr class="border-b border-b-zinc-900">
+              <td class="p-2 text-left">{{ record.name }}</td>
+              <td class="p-2 text-right">{{ record.count.unwrap_or(0) }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div
+        class="space-y-4 rounded-2xl border border-zinc-800/30 bg-zinc-900/50 p-4 text-xl md:col-span-4"
+      >
+        <div>
+          <p class="text-2xl font-medium">Лучшие по пердежам</p>
+          <p class="text-sm font-medium text-zinc-600">За все время</p>
+        </div>
+        <table class="table-auto w-full text-medium text-lg">
+          <thead>
+            <tr class="border-b border-b-zinc-900">
+              <th class="p-2 text-zinc-600 text-left">Имя</th>
+              <th class="p-2 text-zinc-600 text-right">число</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for record in leaderboard2 %}
+            <tr class="border-b border-b-zinc-900">
+              <td class="p-2 text-left">{{ record.name }}</td>
+              <td class="p-2 text-right">{{ record.count.unwrap_or(0) }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div
+        class="space-y-4 rounded-2xl border border-zinc-800/30 bg-zinc-900/50 p-4 text-xl md:col-span-4"
+      >
+        <div>
+          <p class="text-2xl font-medium">Лучшие по сранью</p>
+          <p class="text-sm font-medium text-zinc-600">За все время</p>
+        </div>
+        <table class="table-auto w-full text-medium text-lg">
+          <thead>
+            <tr class="border-b border-b-zinc-900">
+              <th class="p-2 text-zinc-600 text-left">Имя</th>
+              <th class="p-2 text-zinc-600 text-right">число</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for record in leaderboard3 %}
+            <tr class="border-b border-b-zinc-900">
+              <td class="p-2 text-left">{{ record.name }}</td>
+              <td class="p-2 text-right">{{ record.count.unwrap_or(0) }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </body>
+</html>
