@@ -27,7 +27,7 @@ jobs:
         username: ${{ secrets.SSH_USER }}
         password: ${{ secrets.SSH_PASSWORD }}
         script: |
-          cd ura
+          cd ura/project-ura
           git fetch
           git pull
           docker compose down
