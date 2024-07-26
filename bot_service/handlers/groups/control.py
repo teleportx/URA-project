@@ -25,16 +25,24 @@ class DeleteGroupStates(StatesGroup):
     writing_name = State()
 
 
+group_menu_text = ('<b>Меню управления группами.</b>\n'
+                   'Объединяйтесь в группы, чтобы уведомлять друг друга, когда вы идете срать! '
+                   'В группе всем лично придет уведомление о том, что вы идете срать.\n\n'
+                   '<i>Учтите вы можете состоять не более чем в 5 группах. '
+                   'Также в группах может состоять не более 21 человека, '
+                   'если вам нужно больше воспользуйтесь каналами\n(/channels)</i>\n\n')
+
+
 # GROUP MAIN MENU
 @router.message(Command('groups'))
 async def groups_menu(message: types.Message, user: User):
-    await message.answer('Выберите группу.', reply_markup=await groups_keyboard.get_all(user))
+    await message.answer(group_menu_text, reply_markup=await groups_keyboard.get_all(user))
 
 
 @router.callback_query(groups_keyboard.GroupCallback.filter(F.action == 'main'))
 async def groups_menu_callback(callback: types.CallbackQuery, user: User, state: FSMContext):
     await state.clear()
-    await callback.message.edit_text('Выберите группу.', reply_markup=await groups_keyboard.get_all(user))
+    await callback.message.edit_text(group_menu_text, reply_markup=await groups_keyboard.get_all(user))
 
 
 # CREATE GROUP

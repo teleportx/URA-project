@@ -25,7 +25,10 @@ class CreateChannelStates(StatesGroup):
     send_message_from_channel = State()
 
 
-channel_menu_text = 'Каналы'
+channel_menu_text = ('<b>Меню управления каналами.</b>\n'
+                     'Присоединяйтесь в каналы, чтобы уведомлять большое число людей, когда вы идете срать! '
+                     'В канале уведомление о том, что вы идете срать придет в созданный вами тг канал.\n\n'
+                     'Добавляйте в тг канал кого хотите, а в канал ура, только тех кто будет уведомлять о том, что он пошел срать.')
 channel_members_menu_text = 'Нажмите на пользователя, которого хотите удалить.'
 
 router.callback_query.middleware.register(ChannelMiddleware(channel_menu_text))
@@ -48,7 +51,8 @@ async def answer_channel_deleted(callback: types.CallbackQuery, user: User):
     await callback.answer('Бот больше не в канале.', show_alert=True)
 
 
-async def is_admin_channel(channel_bot: types.Chat, user_id: int, channel_admins: List[types.ChatMember] = None) -> bool:
+async def is_admin_channel(channel_bot: types.Chat, user_id: int,
+                           channel_admins: List[types.ChatMember] = None) -> bool:
     if channel_admins is None:
         channel_admins = await channel_bot.get_administrators()
     for el in channel_admins:
@@ -187,8 +191,9 @@ async def delete_channel_member(callback: types.CallbackQuery):
     clicked_button = find_button_by_callback_data(callback.message.reply_markup, callback.data)
     cb_data = ChannelMemberDeleteCallbackData.unpack(callback.data)
 
-    await callback.message.edit_text(f'Вы уверены, что хотите удалить из канала пользователя <b>{clicked_button.text}</b>?',
-                                     reply_markup=channels_keyboard.get_delete_user_submit(cb_data.channel_id, cb_data.user_id))
+    await callback.message.edit_text(
+        f'Вы уверены, что хотите удалить из канала пользователя <b>{clicked_button.text}</b>?',
+        reply_markup=channels_keyboard.get_delete_user_submit(cb_data.channel_id, cb_data.user_id))
 
 
 @router.callback_query(ChannelMemberDeleteCallbackData.filter(F.submit))
