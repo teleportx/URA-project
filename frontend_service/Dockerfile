@@ -35,7 +35,6 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y libssl-dev ca-certificates && rm -rf /var/lib/apt/lists/*
 
 COPY --from=build /app/target/release/ura-web .
-COPY ./public ./public
 COPY --from=build /app/public/styles.css ./public/styles.css
 
 CMD ["./ura-web"]
