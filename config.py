@@ -39,7 +39,7 @@ class Constants:
 
     srat_delete_time = 60 * 4  # in minutes
 
-    export_info_interval = 7 * 24 * 60 * 60  # in seconds
+    export_info_interval = 24 * 60 * 60  # in seconds
 
     throttling_time = 0.5  # in seconds
     throttling_time_actions = (  # in minutes
