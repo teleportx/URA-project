@@ -12,6 +12,14 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v2
 
+    - name: Netbird Connect
+      id: netbird
+      uses: Alemiz112/netbird-connect@v1
+      with:
+        setup-key: ${{ secrets.NETBIRD_SETUP_KEY }}
+        hostname: 'deploy-ura'
+        management-url: 'https://api.netbird.io'
+
     - name: Deploy
       uses: appleboy/ssh-action@master
       with:
@@ -19,4 +27,8 @@ jobs:
         username: ${{ secrets.SSH_USER }}
         password: ${{ secrets.SSH_PASSWORD }}
         script: |
-          sh urabot_deploy.sh
+          cd ura/project-ura
+          git fetch
+          git pull
+          docker compose down
+          docker compose up -d --build
