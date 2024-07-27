@@ -41,9 +41,13 @@ def render_time(val):
 
 
 @router.message(Command("anal"))
-async def anal(message: types.Message, user: User):
+async def anal(message: types.Message, command: CommandObject, user: User):
+    user_id = user.uid
+    if user.admin and command.args is not None and command.args.isnumeric():
+        user_id = int(command.args)
+
     conn = Tortoise.get_connection('default')
-    res = await conn.execute_query(stat_request % user.uid)
+    res = await conn.execute_query(stat_request % user_id)
 
     co = [
         [0, 0, 0],
@@ -67,20 +71,24 @@ async def anal(message: types.Message, user: User):
         if crit:
             avg[2] = calc_avg(avg[2], el)
 
+    pronouns = 'вы'
+    if user.uid != user_id:
+        pronouns = str(user_id)
+
     text = (
-            f'<b>Всего за все время вы:</b>\n'
+            f'<b>Всего за все время {pronouns}:</b>\n'
             f'Раз срали: <code>{co[0][0]}</code>\n'
             f'Раз дристали: <code>{co[0][1]}</code>\n'
             f'Пернули: <code>{co[0][2]}</code>\n'
             f'Среднее время в туалете: <code>{render_time(avg[0])}</code>\n\n'
             
-            f'<b>За последний месяц вы:</b>\n'
+            f'<b>За последний месяц {pronouns}:</b>\n'
             f'Раз срали: <code>{co[1][0]}</code>\n'
             f'Раз дристали: <code>{co[1][1]}</code>\n'
             f'Пернули: <code>{co[1][2]}</code>\n'
             f'Среднее время в туалете: <code>{render_time(avg[1])}</code>\n\n'
             
-            f'<b>За последнюю неделю вы:</b>\n'
+            f'<b>За последнюю неделю {pronouns}:</b>\n'
             f'Раз срали: <code>{co[2][0]}</code>\n'
             f'Раз дристали: <code>{co[2][1]}</code>\n'
             f'Пернули: <code>{co[2][2]}</code>\n'
