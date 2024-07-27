@@ -1,7 +1,3 @@
-from typing import List
-
-import aiogram
-from aiogram import Bot
 from aiogram.filters.callback_data import CallbackData
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
@@ -10,8 +6,8 @@ from db.User import User
 from db.UserUnion import Channel
 from utils import paged_keyboard
 
-channels_on_one_page = 1
-channel_members_on_one_page = 1
+channels_on_one_page = 9
+channel_members_on_one_page = 18
 
 
 class ChannelCallbackData(CallbackData, prefix="chn"):

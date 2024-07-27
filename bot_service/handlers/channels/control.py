@@ -12,8 +12,8 @@ import config
 from db import UserUnion
 from db.User import User
 from db.UserUnion import Channel
-from keyboards.channel import channels_keyboard
-from keyboards.channel.channels_keyboard import ChannelCallbackData, ChannelPagedCallbackData, \
+from keyboards import channels_keyboard
+from keyboards.channels_keyboard import ChannelCallbackData, ChannelPagedCallbackData, \
     ChannelMemberDeleteCallbackData
 from middlewares.channel import ChannelMiddleware
 from utils.find_button_by_callback import find_button_by_callback_data

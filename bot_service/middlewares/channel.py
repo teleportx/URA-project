@@ -4,7 +4,7 @@ from typing import Any, Dict, Callable
 from aiogram import types
 
 from db.UserUnion import Channel
-from keyboards.channel import channels_keyboard
+from keyboards import channels_keyboard
 from bot_service.middlewares.util import UtilMiddleware
 
 
