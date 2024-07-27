@@ -1,12 +1,13 @@
 import sys
+
+sys.path.append('..')
+
 from datetime import datetime
 
 from aiogram.types import BufferedInputFile
 from tortoise.expressions import Q
 
 from db.ToiletSessions import SretSession
-
-sys.path.append('..')
 
 import asyncio
 import json
