@@ -67,7 +67,7 @@ async def anal(message: types.Message, command: CommandObject, user: User):
             if crit:
                 avg[1] = calc_avg(avg[1], el)
 
-        co[2][el['sret_type'] - 1] = el['count']
+        co[2][el['sret_type'] - 1] += el['count']
         if crit:
             avg[2] = calc_avg(avg[2], el)
 
@@ -77,9 +77,9 @@ async def anal(message: types.Message, command: CommandObject, user: User):
 
     text = (
             f'<b>Всего за все время {pronouns}:</b>\n'
-            f'Раз срали: <code>{co[0][0]}</code>\n'
-            f'Раз дристали: <code>{co[0][1]}</code>\n'
-            f'Пернули: <code>{co[0][2]}</code>\n'
+            f'Раз срали: <code>{co[2][0]}</code>\n'
+            f'Раз дристали: <code>{co[2][1]}</code>\n'
+            f'Пернули: <code>{co[2][2]}</code>\n'
             f'Среднее время в туалете: <code>{render_time(avg[0])}</code>\n\n'
             
             f'<b>За последний месяц {pronouns}:</b>\n'
@@ -89,9 +89,9 @@ async def anal(message: types.Message, command: CommandObject, user: User):
             f'Среднее время в туалете: <code>{render_time(avg[1])}</code>\n\n'
             
             f'<b>За последнюю неделю {pronouns}:</b>\n'
-            f'Раз срали: <code>{co[2][0]}</code>\n'
-            f'Раз дристали: <code>{co[2][1]}</code>\n'
-            f'Пернули: <code>{co[2][2]}</code>\n'
+            f'Раз срали: <code>{co[0][0]}</code>\n'
+            f'Раз дристали: <code>{co[0][1]}</code>\n'
+            f'Пернули: <code>{co[0][2]}</code>\n'
             f'Среднее время в туалете: <code>{render_time(avg[2])}</code>\n\n'
             
             f'Аккаунт создан: <code>{user.created_at}</code>\n'
