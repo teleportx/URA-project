@@ -7,7 +7,7 @@ services:
       POSTGRES_PASSWORD: urabot
       POSTGRES_DB: urabot
     ports:
-      - "5432:5432"
+      - "51432:5432"
     volumes:
       - ../data/postgres:/var/lib/postgresql/data
 

@@ -15,7 +15,7 @@ async def send_message(
         notify_id: Optional[int] = None,
         show_sender: bool = False
 ):
-    channel = await base.connection.channel()
+    channel = await (await base.storer.get_connection()).channel()
 
     body = json.dumps({
         "send_to": send_to,
