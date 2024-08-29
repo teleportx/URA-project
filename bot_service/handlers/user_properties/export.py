@@ -19,9 +19,10 @@ async def export(message: types.Message, command: CommandObject, user: User):
 
     if not user.admin:
         key = f'{user.uid}_export'
-        last_export = int(await config.storage.redis.get(key))
+        last_export = await config.storage.redis.get(key)
         if last_export is None:
             last_export = 0
+        last_export = int(last_export)
 
         now = int(datetime.now().timestamp())
 
