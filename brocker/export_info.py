@@ -6,7 +6,7 @@ from . import base
 
 
 async def export_info(send_to: int, user_id: int):
-    channel = await base.connection.channel()
+    channel = await (await base.storer.get_connection()).channel()
 
     body = json.dumps({
         "send_to_user_id": send_to,
