@@ -10,7 +10,7 @@ from bot_service.middlewares.util import UtilMiddleware
 
 first_join_message_text = '''Добро пожаловать в УРА!
 
-*Команды:*
+<b>Команды:</b>
 /guide - Гайд по боту
 /credits - О боте'''
 
