@@ -76,7 +76,4 @@ async def send_srat_inline(chosen_result: ChosenInlineResult, user: User):
         await config.bot.send_message(chosen_result.from_user.id, text)
         return
 
-    smessage_id = await send_srat_notification.send(user, sret)
-
-    if sret in send_srat_notification.must_not_sret:
-        await SretSession.filter(user=user, message_id=smessage_id).update(autoend=False)
+    await send_srat_notification.send(user, sret)
